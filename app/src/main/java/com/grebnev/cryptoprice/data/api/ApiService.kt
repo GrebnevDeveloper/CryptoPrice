@@ -9,17 +9,17 @@ import retrofit2.http.Query
 interface ApiService {
     @GET("top/totalvolfull")
     fun getTopCoinsInfo(
-        @Query(QUERY_PARAM_API_KEY) apiKey : String = "",
-        @Query(QUERY_PARAM_LIMIT) limit : Int = 10,
-        @Query(QUERY_PARAM_TO_SYMBOL) tSym : String = CURRENCY
-    ) : Single<CoinInfoLisOfData>
+        @Query(QUERY_PARAM_API_KEY) apiKey: String = "",
+        @Query(QUERY_PARAM_LIMIT) limit: Int = 10,
+        @Query(QUERY_PARAM_TO_SYMBOL) tSym: String = CURRENCY
+    ): Single<CoinInfoLisOfData>
 
-    @GET("pricemulti")
+    @GET("pricemultifull")
     fun getFullPriceList(
-        @Query(QUERY_PARAM_API_KEY) apiKey : String = "",
-        @Query(QUERY_PARAM_FROM_SYMBOLS) fSyms : String,
-        @Query(QUERY_PARAM_TO_SYMBOLS) tSyms : String = CURRENCY
-    ) : Single<CoinPriceRawData>
+        @Query(QUERY_PARAM_API_KEY) apiKey: String = "",
+        @Query(QUERY_PARAM_FROM_SYMBOLS) fSyms: String?,
+        @Query(QUERY_PARAM_TO_SYMBOLS) tSyms: String = CURRENCY
+    ): Single<CoinPriceRawData>
 
     companion object {
         private const val QUERY_PARAM_API_KEY = "api_key"
