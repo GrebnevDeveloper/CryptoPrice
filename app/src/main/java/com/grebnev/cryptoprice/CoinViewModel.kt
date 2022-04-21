@@ -3,6 +3,7 @@ package com.grebnev.cryptoprice
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import com.google.gson.Gson
 import com.grebnev.cryptoprice.data.api.ApiFactory
 import com.grebnev.cryptoprice.data.database.AppDatabase
@@ -10,6 +11,7 @@ import com.grebnev.cryptoprice.data.pojo.price.CoinPrice
 import com.grebnev.cryptoprice.data.pojo.price.CoinPriceRawData
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class CoinViewModel(application: Application) : AndroidViewModel(application) {
     private val db = AppDatabase.getInstance(application)
@@ -17,11 +19,22 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
 
     val priceList = db.coinPriceDao().getCoinPriceList()
 
-    fun loadData() {
+    init {
+        loadData()
+    }
+
+    fun getDetailInfo(fSym: String): LiveData<CoinPrice> {
+        return db.coinPriceDao().getCoinPriceFromSymbol(fSym)
+    }
+
+    private fun loadData() {
         val disposable = ApiFactory.apiService.getTopCoinsInfo()
             .map { it.data?.map { it.coinInfo?.name }?.joinToString(",").toString() }
             .flatMap { ApiFactory.apiService.getFullPriceList(fSyms = it) }
             .map { getPriceListFromRawData(it) }
+            .delaySubscription(10, TimeUnit.SECONDS)
+            .repeat()
+            .retry()
             .subscribeOn(Schedulers.io())
             .subscribe({
                 db.coinPriceDao().insertCoinPriceList(it)
