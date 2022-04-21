@@ -19,7 +19,7 @@ data class CoinPrice(
     @PrimaryKey
     @SerializedName("FROMSYMBOL")
     @Expose
-    val fromSymbol: String? = null,
+    val fromSymbol: String,
 
     @SerializedName("TOSYMBOL")
     @Expose
