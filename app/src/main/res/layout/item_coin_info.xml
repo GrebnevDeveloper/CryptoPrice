@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/iv_log_coin"
+            android:id="@+id/iv_logo_coin"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="8dp"
