@@ -30,6 +30,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    viewBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -43,6 +46,8 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     def lifecycle_version = "2.5.0-beta01"
 

@@ -9,8 +9,8 @@ import com.grebnev.cryptoprice.data.pojo.price.CoinPrice
 
 @Dao
 interface CoinPriceDao {
-    @Query("SELECT * FROM full_price_list ORDER BY lastUpdate")
-    fun getCoinPriceList(): LiveData<CoinPrice>
+    @Query("SELECT * FROM full_price_list ORDER BY lastUpdate DESC")
+    fun getCoinPriceList(): LiveData<List<CoinPrice>>
 
     @Query("SELECT * FROM full_price_list WHERE fromSymbol == :fSym LIMIT 1")
     fun getCoinPriceFromSymbol(fSym: String): LiveData<CoinPrice>
