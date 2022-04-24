@@ -1,7 +1,6 @@
 package com.grebnev.cryptoprice
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.grebnev.cryptoprice.data.pojo.price.CoinPrice
@@ -23,7 +22,9 @@ class CoinPriceListActivity : AppCompatActivity() {
         }
         adapter.onCoinClickListener = object : CoinPriceAdapter.OnCoinClickListener {
             override fun onCoinClick(coin: CoinPrice) {
-                Log.d("COIN_CLICK_TEST", coin.fromSymbol)
+                val intent =
+                    CoinDetailActivity.newIntent(this@CoinPriceListActivity, coin.fromSymbol)
+                startActivity(intent)
             }
 
         }

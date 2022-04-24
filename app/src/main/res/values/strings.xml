@@ -2,4 +2,10 @@
     <string name="app_name">CryptoPrice</string>
     <string name="symbols_template">%s / %s</string>
     <string name="last_update_template">Время последнего обновления: %s</string>
+    <string name="slash">/</string>
+    <string name="price">Цена:</string>
+    <string name="min_price">Минимум за день:</string>
+    <string name="max_price">Максимум за день:</string>
+    <string name="last_market">Последняя сделка:</string>
+    <string name="last_update">Обновлено:</string>
 </resources>
