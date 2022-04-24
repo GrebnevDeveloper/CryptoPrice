@@ -8,4 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="border_view">#BEBEBE</color>
+    <color name="min_price">#D30000</color>
+    <color name="max_price">#38D300</color>
 </resources>
