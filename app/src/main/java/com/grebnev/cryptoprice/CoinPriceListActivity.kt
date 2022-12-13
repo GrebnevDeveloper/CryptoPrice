@@ -3,7 +3,7 @@ package com.grebnev.cryptoprice
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.grebnev.cryptoprice.data.pojo.price.CoinPrice
+import com.grebnev.cryptoprice.data.api.model.CoinDto
 import com.grebnev.cryptoprice.databinding.ActivityCoinPriceListBinding
 
 class CoinPriceListActivity : AppCompatActivity() {
@@ -18,10 +18,10 @@ class CoinPriceListActivity : AppCompatActivity() {
         binding.rvCoinPriceList.adapter = adapter
         coinViewModel = ViewModelProvider(this)[CoinViewModel::class.java]
         coinViewModel.priceList.observe(this) {
-            adapter.coinPriceList = it
+            adapter.coinDtoList = it
         }
         adapter.onCoinClickListener = object : CoinPriceAdapter.OnCoinClickListener {
-            override fun onCoinClick(coin: CoinPrice) {
+            override fun onCoinClick(coin: CoinDto) {
                 val intent =
                     CoinDetailActivity.newIntent(this@CoinPriceListActivity, coin.fromSymbol)
                 startActivity(intent)

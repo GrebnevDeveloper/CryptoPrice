@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.data.pojo.price
+package com.grebnev.cryptoprice.data.api.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,7 +9,7 @@ import com.grebnev.cryptoprice.data.api.ApiFactory.BASE_IMAGE_URL
 import com.grebnev.cryptoprice.utils.convertTimestampToTime
 
 @Entity(tableName = "full_price_list")
-data class CoinPrice(
+data class CoinDto(
     @SerializedName("TYPE")
     @Expose
     val type: String? = null,

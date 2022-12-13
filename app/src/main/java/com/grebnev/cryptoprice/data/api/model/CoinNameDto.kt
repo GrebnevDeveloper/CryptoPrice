@@ -1,9 +1,9 @@
-package com.grebnev.cryptoprice.data.pojo.info
+package com.grebnev.cryptoprice.data.api.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class CoinInfo(
+data class CoinNameDto(
     @SerializedName("Name")
     @Expose
     val name: String? = null,
