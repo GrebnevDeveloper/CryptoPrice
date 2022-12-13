@@ -4,13 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.grebnev.cryptoprice.data.pojo.price.CoinPrice
+import com.grebnev.cryptoprice.data.api.model.CoinDto
 import com.grebnev.cryptoprice.databinding.ItemCoinInfoBinding
 import com.squareup.picasso.Picasso
 
 class CoinPriceAdapter(private val context: Context) :
     RecyclerView.Adapter<CoinPriceAdapter.CoinPriceViewHolder>() {
-    var coinPriceList: List<CoinPrice> = arrayListOf()
+    var coinDtoList: List<CoinDto> = arrayListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -24,18 +24,18 @@ class CoinPriceAdapter(private val context: Context) :
     }
 
     override fun onBindViewHolder(holder: CoinPriceViewHolder, position: Int) {
-        val coin = coinPriceList[position]
+        val coin = coinDtoList[position]
         holder.bind(coin)
         holder.itemView.setOnClickListener {
             onCoinClickListener?.onCoinClick(coin)
         }
     }
 
-    override fun getItemCount() = coinPriceList.size
+    override fun getItemCount() = coinDtoList.size
 
     inner class CoinPriceViewHolder(private val binding: ItemCoinInfoBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(coin: CoinPrice) {
+        fun bind(coin: CoinDto) {
             val symbolsTemplate = context.resources.getString(R.string.symbols_template)
             val lastUpdateTemplate = context.resources.getString(R.string.last_update_template)
             binding.tvSymbols.text = String.format(symbolsTemplate, coin.fromSymbol, coin.toSymbol)
@@ -46,7 +46,7 @@ class CoinPriceAdapter(private val context: Context) :
     }
 
     interface OnCoinClickListener {
-        fun onCoinClick(coin: CoinPrice)
+        fun onCoinClick(coin: CoinDto)
     }
 
 }

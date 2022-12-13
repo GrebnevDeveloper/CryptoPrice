@@ -1,6 +1,11 @@
-package com.grebnev.cryptoprice.domain.model
+package com.grebnev.cryptoprice.data.database
 
-data class Coin(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "full_price_list")
+data class CoinDbModel(
+    @PrimaryKey
     val fromSymbol: String,
     val toSymbol: String?,
     val price: Double?,
