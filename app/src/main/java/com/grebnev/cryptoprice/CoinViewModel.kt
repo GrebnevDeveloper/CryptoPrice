@@ -14,6 +14,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class CoinViewModel(application: Application) : AndroidViewModel(application) {
+
     private val db = AppDatabase.getInstance(application)
     private val compositeDisposable = CompositeDisposable()
 
