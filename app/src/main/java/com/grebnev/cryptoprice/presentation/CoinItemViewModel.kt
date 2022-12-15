@@ -14,7 +14,5 @@ class CoinItemViewModel(application: Application) : AndroidViewModel(application
 
     private val getCoinItemUseCase = GetCoinItemUseCase(repository)
 
-    fun getCoinItem(fromSymbol: String): LiveData<Coin> {
-        return getCoinItemUseCase.invoke(fromSymbol)
-    }
+    fun getCoinItem(fromSymbol: String) = getCoinItemUseCase(fromSymbol)
 }
