@@ -4,9 +4,9 @@ data class Coin(
     val fromSymbol: String,
     val toSymbol: String?,
     val price: Double?,
-    val lastUpdate: Long?,
+    val lastUpdate: String,
     val highDay: Double?,
     val lowDay: Double?,
     val lastMarket: String?,
-    val imageUrl: String?
+    val imageUrl: String
 )

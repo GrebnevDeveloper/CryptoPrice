@@ -12,7 +12,10 @@ class CoinListViewModel(application: Application) : AndroidViewModel(application
     private val loadDataUseCase = LoadDataUseCase(repository)
     private val getCoinListUseCase = GetCoinListUseCase(repository)
 
-    val coinList = getCoinListUseCase.invoke()
+    val coinList = getCoinListUseCase()
 
+    init {
+        loadDataUseCase()
+    }
 
 }

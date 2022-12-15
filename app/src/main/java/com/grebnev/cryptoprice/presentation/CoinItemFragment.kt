@@ -10,25 +10,27 @@ import com.grebnev.cryptoprice.databinding.FragmentCoinItemBinding
 import com.squareup.picasso.Picasso
 
 class CoinItemFragment : Fragment() {
-    private val binding by lazy {
-        FragmentCoinItemBinding.inflate(layoutInflater)
+    private val viewModel by lazy {
+        ViewModelProvider(this)[CoinItemViewModel::class.java]
     }
 
-    private val viewModel by lazy {
-        ViewModelProvider(this, defaultViewModelProviderFactory)[CoinItemViewModel::class.java]
-    }
+    private var _binding: FragmentCoinItemBinding? = null
+    private val binding: FragmentCoinItemBinding
+        get() = _binding ?: throw RuntimeException("FragmentCoinItemBinding is null")
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        _binding = FragmentCoinItemBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getCoinItem().observe(viewLifecycleOwner) {
+        val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
+        viewModel.getCoinItem(fromSymbol).observe(viewLifecycleOwner) {
             with(binding) {
                 tvFromSymbol.text = it.fromSymbol
                 tvToSymbol.text = it.toSymbol
@@ -36,10 +38,28 @@ class CoinItemFragment : Fragment() {
                 tvMinPrice.text = it.lowDay.toString()
                 tvMaxPrice.text = it.highDay.toString()
                 tvLastMarket.text = it.lastMarket
-                tvLastUpdate.text = it.getFormattedTime()
-                Picasso.get().load(it.getFullUrlImage()).into(binding.ivLogoCoinDetail)
+                tvLastUpdate.text = it.lastUpdate
+                Picasso.get().load(it.imageUrl).into(binding.ivLogoCoinDetail)
             }
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        private const val EXTRA_FROM_SYMBOL = "from_symbol"
+        private const val EMPTY_SYMBOL = ""
+
+        fun newInstance(fromSymbol: String): CoinItemFragment {
+            return CoinItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(EXTRA_FROM_SYMBOL, fromSymbol)
+                }
+            }
+        }
     }
 }
