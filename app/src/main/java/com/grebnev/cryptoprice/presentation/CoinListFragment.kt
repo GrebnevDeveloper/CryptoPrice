@@ -1,5 +1,6 @@
 package com.grebnev.cryptoprice.presentation
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,16 +35,28 @@ class CoinListFragment : Fragment() {
         val adapter = CoinAdapter(requireActivity())
         adapter.onCoinClickListener = object : CoinAdapter.OnCoinClickListener {
             override fun onCoinClick(coin: Coin) {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.main_container, CoinItemFragment.newInstance(coin.fromSymbol))
-                    .addToBackStack(null)
-                    .commit()
+                if (isLandscapeOrientation()) {
+                    requireActivity().supportFragmentManager.popBackStack()
+                    launchCoinItemFragment(R.id.second_container, coin)
+                } else {
+                    launchCoinItemFragment(R.id.main_container, coin)
+                }
             }
         }
         binding.rvCoinPriceList.adapter = adapter
         viewModel.coinList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
+    }
+
+    private fun isLandscapeOrientation() =
+        requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    private fun launchCoinItemFragment(resId: Int, coin: Coin) {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(resId, CoinItemFragment.newInstance(coin.fromSymbol))
+            .addToBackStack(null)
+            .commit()
     }
 
     companion object {
