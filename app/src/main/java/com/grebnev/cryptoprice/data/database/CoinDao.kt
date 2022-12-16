@@ -15,5 +15,5 @@ interface CoinDao {
     fun getCoinFromSymbol(fSym: String): LiveData<CoinDbModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCoinList(coinDDbModelList: List<CoinDbModel>)
+    suspend fun insertCoinList(coinDDbModelList: List<CoinDbModel>)
 }
