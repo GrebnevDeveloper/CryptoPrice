@@ -47,8 +47,8 @@ class CoinListFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): CoinItemFragment {
-            return CoinItemFragment()
+        fun newInstance(): CoinListFragment {
+            return CoinListFragment()
         }
     }
 }

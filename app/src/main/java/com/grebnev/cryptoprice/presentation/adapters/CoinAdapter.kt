@@ -10,11 +10,6 @@ import com.squareup.picasso.Picasso
 
 class CoinAdapter(private val context: Context) :
     ListAdapter<Coin, CoinViewHolder>(CoinDiffCallback) {
-    var coinList: List<Coin> = arrayListOf()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
     var onCoinClickListener: OnCoinClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoinViewHolder {
@@ -43,5 +38,4 @@ class CoinAdapter(private val context: Context) :
     interface OnCoinClickListener {
         fun onCoinClick(coin: Coin)
     }
-
 }
