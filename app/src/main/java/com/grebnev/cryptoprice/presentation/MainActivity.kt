@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportFragmentManager.beginTransaction()
             .replace(R.id.main_container, CoinListFragment.newInstance())
-            .addToBackStack(null)
             .commit()
     }
 }
