@@ -1,7 +1,7 @@
-package com.grebnev.cryptoprice.data.api
+package com.grebnev.cryptoprice.data.network
 
-import com.grebnev.cryptoprice.data.api.model.CoinJsonContainerDto
-import com.grebnev.cryptoprice.data.api.model.CoinNameListDto
+import com.grebnev.cryptoprice.data.network.model.CoinJsonContainerDto
+import com.grebnev.cryptoprice.data.network.model.CoinNameListDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.data.api
+package com.grebnev.cryptoprice.data.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

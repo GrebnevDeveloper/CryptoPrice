@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.data.api.model
+package com.grebnev.cryptoprice.data.network.model
 
 import com.google.gson.JsonObject
 import com.google.gson.annotations.Expose

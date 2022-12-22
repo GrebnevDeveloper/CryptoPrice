@@ -5,7 +5,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
-import com.grebnev.cryptoprice.data.api.ApiFactory
+import com.grebnev.cryptoprice.data.network.ApiFactory
 import com.grebnev.cryptoprice.data.database.AppDatabase
 import com.grebnev.cryptoprice.data.mapper.CoinMapper
 import kotlinx.coroutines.delay
