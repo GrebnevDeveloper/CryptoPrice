@@ -1,17 +1,18 @@
 package com.grebnev.cryptoprice.data.mapper
 
 import com.google.gson.Gson
+import com.grebnev.cryptoprice.data.database.CoinDbModel
 import com.grebnev.cryptoprice.data.network.ApiFactory.BASE_IMAGE_URL
 import com.grebnev.cryptoprice.data.network.model.CoinDto
 import com.grebnev.cryptoprice.data.network.model.CoinJsonContainerDto
 import com.grebnev.cryptoprice.data.network.model.CoinNameListDto
-import com.grebnev.cryptoprice.data.database.CoinDbModel
 import com.grebnev.cryptoprice.domain.entity.Coin
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class CoinMapper {
+class CoinMapper @Inject constructor() {
     fun mapDtoToDbModel(coinDto: CoinDto) = CoinDbModel(
         fromSymbol = coinDto.fromSymbol,
         toSymbol = coinDto.toSymbol,

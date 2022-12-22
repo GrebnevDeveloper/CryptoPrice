@@ -1,16 +1,14 @@
 package com.grebnev.cryptoprice.presentation
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import com.grebnev.cryptoprice.data.repository.CoinRepositoryImpl
+import androidx.lifecycle.ViewModel
 import com.grebnev.cryptoprice.domain.usecase.GetCoinListUseCase
 import com.grebnev.cryptoprice.domain.usecase.LoadDataUseCase
+import javax.inject.Inject
 
-class CoinListViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = CoinRepositoryImpl(application)
-
-    private val loadDataUseCase = LoadDataUseCase(repository)
-    private val getCoinListUseCase = GetCoinListUseCase(repository)
+class CoinListViewModel @Inject constructor(
+    private val loadDataUseCase: LoadDataUseCase,
+    private val getCoinListUseCase: GetCoinListUseCase
+) : ViewModel() {
 
     val coinList = getCoinListUseCase()
 
