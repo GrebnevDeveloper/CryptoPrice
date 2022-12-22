@@ -1,5 +1,6 @@
 package com.grebnev.cryptoprice.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,15 +9,28 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.grebnev.cryptoprice.databinding.FragmentCoinItemBinding
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
 class CoinItemFragment : Fragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val viewModel by lazy {
-        ViewModelProvider(this)[CoinItemViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[CoinItemViewModel::class.java]
+    }
+
+    private val component by lazy {
+        (requireActivity().application as BaseApplication).component
     }
 
     private var _binding: FragmentCoinItemBinding? = null
     private val binding: FragmentCoinItemBinding
         get() = _binding ?: throw RuntimeException("FragmentCoinItemBinding is null")
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

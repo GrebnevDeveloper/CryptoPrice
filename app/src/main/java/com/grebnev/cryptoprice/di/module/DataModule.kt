@@ -1,14 +1,18 @@
 package com.grebnev.cryptoprice.di.module
 
+import android.app.Application
+import com.grebnev.cryptoprice.data.database.AppDatabase
 import com.grebnev.cryptoprice.data.database.CoinDao
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 
 @Module
-interface DataModule {
+class DataModule {
 
-    @Binds
-    fun bindDatabaseSource(): CoinDao
+    @Provides
+    fun bindDatabaseSource(application: Application): CoinDao {
+        return AppDatabase.getInstance(application).coinDao()
+    }
 
 
 }

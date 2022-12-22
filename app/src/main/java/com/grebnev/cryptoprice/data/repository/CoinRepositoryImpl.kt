@@ -1,21 +1,22 @@
 package com.grebnev.cryptoprice.data.repository
 
-import android.content.Context
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
-import com.grebnev.cryptoprice.data.database.AppDatabase
+import com.grebnev.cryptoprice.data.database.CoinDao
 import com.grebnev.cryptoprice.data.mapper.CoinMapper
 import com.grebnev.cryptoprice.data.workers.RefreshDataWorker
 import com.grebnev.cryptoprice.domain.CoinRepository
 import com.grebnev.cryptoprice.domain.entity.Coin
+import javax.inject.Inject
 
-class CoinRepositoryImpl(private val context: Context) : CoinRepository {
-
-    private val coinDao = AppDatabase.getInstance(context).coinDao()
-
-    private val mapper = CoinMapper()
+class CoinRepositoryImpl @Inject constructor(
+    private val application: Application,
+    private val coinDao: CoinDao,
+    private val mapper: CoinMapper
+) : CoinRepository {
 
     override fun getCoinList(): LiveData<List<Coin>> = Transformations.map(
         coinDao.getCoinList()
@@ -32,7 +33,7 @@ class CoinRepositoryImpl(private val context: Context) : CoinRepository {
     }
 
     override fun loadData() {
-        val workManager = WorkManager.getInstance(context)
+        val workManager = WorkManager.getInstance(application)
         workManager.enqueueUniqueWork(
             RefreshDataWorker.NAME,
             ExistingWorkPolicy.REPLACE,
