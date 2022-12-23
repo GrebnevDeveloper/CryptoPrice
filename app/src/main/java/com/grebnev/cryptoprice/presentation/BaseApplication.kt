@@ -2,17 +2,14 @@ package com.grebnev.cryptoprice.presentation
 
 import android.app.Application
 import androidx.work.Configuration
-import com.grebnev.cryptoprice.data.database.AppDatabase
-import com.grebnev.cryptoprice.data.mapper.CoinMapper
-import com.grebnev.cryptoprice.data.network.ApiFactory
-import com.grebnev.cryptoprice.data.workers.RefreshDataWorkerFactory
+import com.grebnev.cryptoprice.data.workers.CoinWorkerFactory
 import com.grebnev.cryptoprice.di.DaggerApplicationComponent
 import javax.inject.Inject
 
 class BaseApplication : Application(), Configuration.Provider {
 
     @Inject
-    lateinit var refreshDataWorkerFactory: RefreshDataWorkerFactory
+    lateinit var coinWorkerFactory: CoinWorkerFactory
 
     val component by lazy {
         DaggerApplicationComponent.factory()
@@ -26,7 +23,7 @@ class BaseApplication : Application(), Configuration.Provider {
 
     override fun getWorkManagerConfiguration(): Configuration {
         return Configuration.Builder()
-            .setWorkerFactory(refreshDataWorkerFactory)
+            .setWorkerFactory(coinWorkerFactory)
             .build()
     }
 }

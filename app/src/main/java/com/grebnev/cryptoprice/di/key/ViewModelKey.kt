@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.di
+package com.grebnev.cryptoprice.di.key
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey
