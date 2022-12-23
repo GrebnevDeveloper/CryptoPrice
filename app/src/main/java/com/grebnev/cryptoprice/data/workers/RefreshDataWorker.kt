@@ -1,16 +1,12 @@
 package com.grebnev.cryptoprice.data.workers
 
 import android.content.Context
-import androidx.work.CoroutineWorker
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkerParameters
-import com.grebnev.cryptoprice.data.network.ApiFactory
-import com.grebnev.cryptoprice.data.database.AppDatabase
+import androidx.work.*
 import com.grebnev.cryptoprice.data.database.CoinDao
 import com.grebnev.cryptoprice.data.mapper.CoinMapper
 import com.grebnev.cryptoprice.data.network.ApiService
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
 class RefreshDataWorker(
     context: Context,
@@ -43,6 +39,20 @@ class RefreshDataWorker(
 
         fun makeRequest(): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<RefreshDataWorker>().build()
+        }
+    }
+
+    class Factory @Inject constructor(
+        private val coinDao: CoinDao,
+        private val apiService: ApiService,
+        private val mapper: CoinMapper
+    ) : ChildCoinWorkerFactory {
+
+        override fun create(
+            context: Context,
+            workerParameters: WorkerParameters
+        ): ListenableWorker {
+            return RefreshDataWorker(context, workerParameters, coinDao, apiService, mapper)
         }
     }
 }
