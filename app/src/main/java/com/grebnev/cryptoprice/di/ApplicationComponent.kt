@@ -4,6 +4,7 @@ import android.app.Application
 import com.grebnev.cryptoprice.di.module.DataModule
 import com.grebnev.cryptoprice.di.module.DomainModule
 import com.grebnev.cryptoprice.di.module.ViewModelModule
+import com.grebnev.cryptoprice.presentation.BaseApplication
 import com.grebnev.cryptoprice.presentation.CoinItemFragment
 import com.grebnev.cryptoprice.presentation.CoinListFragment
 import dagger.BindsInstance
@@ -15,6 +16,7 @@ interface ApplicationComponent {
 
     fun inject(coinListFragment: CoinListFragment)
     fun inject(coinItemFragment: CoinItemFragment)
+    fun inject(application: BaseApplication)
 
     @Component.Factory
     interface ApplicationComponentFactory {

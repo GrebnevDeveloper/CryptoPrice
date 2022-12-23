@@ -7,18 +7,18 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import com.grebnev.cryptoprice.data.network.ApiFactory
 import com.grebnev.cryptoprice.data.database.AppDatabase
+import com.grebnev.cryptoprice.data.database.CoinDao
 import com.grebnev.cryptoprice.data.mapper.CoinMapper
+import com.grebnev.cryptoprice.data.network.ApiService
 import kotlinx.coroutines.delay
 
 class RefreshDataWorker(
     context: Context,
-    workerParameters: WorkerParameters
+    workerParameters: WorkerParameters,
+    private val coinDao: CoinDao,
+    private val apiService: ApiService,
+    private val mapper: CoinMapper
 ) : CoroutineWorker(context, workerParameters) {
-
-    private val coinDao = AppDatabase.getInstance(context).coinDao()
-    private val apiService = ApiFactory.apiService
-
-    private val mapper = CoinMapper()
 
     override suspend fun doWork(): Result {
         while (true) {
