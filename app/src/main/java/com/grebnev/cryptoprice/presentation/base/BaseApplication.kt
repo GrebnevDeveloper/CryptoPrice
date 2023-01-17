@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.presentation
+package com.grebnev.cryptoprice.presentation.base
 
 import android.app.Application
 import androidx.work.Configuration

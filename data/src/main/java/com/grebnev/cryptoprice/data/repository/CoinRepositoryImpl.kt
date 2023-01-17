@@ -6,7 +6,7 @@ import androidx.work.WorkManager
 import com.grebnev.cryptoprice.data.database.CoinDao
 import com.grebnev.cryptoprice.data.mapper.CoinMapper
 import com.grebnev.cryptoprice.data.workers.RefreshDataWorker
-import com.grebnev.cryptoprice.domain.CoinRepository
+import com.grebnev.cryptoprice.domain.repository.CoinRepository
 import com.grebnev.cryptoprice.domain.entity.Coin
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
