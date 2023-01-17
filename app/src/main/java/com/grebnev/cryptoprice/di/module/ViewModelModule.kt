@@ -2,8 +2,8 @@ package com.grebnev.cryptoprice.di.module
 
 import androidx.lifecycle.ViewModel
 import com.grebnev.cryptoprice.di.key.ViewModelKey
-import com.grebnev.cryptoprice.presentation.CoinItemViewModel
-import com.grebnev.cryptoprice.presentation.CoinListViewModel
+import com.grebnev.cryptoprice.presentation.coinitem.CoinItemViewModel
+import com.grebnev.cryptoprice.presentation.coinlist.CoinListViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

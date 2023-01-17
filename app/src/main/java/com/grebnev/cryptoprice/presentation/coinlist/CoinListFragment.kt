@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.presentation
+package com.grebnev.cryptoprice.presentation.coinlist
 
 import android.content.Context
 import android.content.res.Configuration
@@ -11,7 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.grebnev.cryptoprice.R
 import com.grebnev.cryptoprice.databinding.FragmentCoinListBinding
 import com.grebnev.cryptoprice.domain.entity.Coin
+import com.grebnev.cryptoprice.presentation.coinitem.CoinItemFragment
 import com.grebnev.cryptoprice.presentation.adapters.CoinAdapter
+import com.grebnev.cryptoprice.presentation.base.BaseApplication
+import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
 import javax.inject.Inject
 
 class CoinListFragment : Fragment() {

@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.presentation
+package com.grebnev.cryptoprice.presentation.coinlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

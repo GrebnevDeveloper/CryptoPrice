@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.presentation
+package com.grebnev.cryptoprice.presentation.coinitem
 
 import android.content.Context
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.grebnev.cryptoprice.databinding.FragmentCoinItemBinding
+import com.grebnev.cryptoprice.presentation.base.BaseApplication
+import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 

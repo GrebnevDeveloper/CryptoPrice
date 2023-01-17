@@ -1,9 +1,10 @@
-package com.grebnev.cryptoprice.presentation
+package com.grebnev.cryptoprice.presentation.base
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.grebnev.cryptoprice.R
 import com.grebnev.cryptoprice.databinding.ActivityMainBinding
+import com.grebnev.cryptoprice.presentation.coinlist.CoinListFragment
 
 class MainActivity : AppCompatActivity() {
 

@@ -14,13 +14,13 @@ class DataModule {
 
     @ApplicationScope
     @Provides
-    fun bindDatabase(application: Application): CoinDao {
+    fun provideDatabase(application: Application): CoinDao {
         return AppDatabase.getInstance(application).coinDao()
     }
 
     @ApplicationScope
     @Provides
-    fun bindApiService(): ApiService {
+    fun provideApiService(): ApiService {
         return ApiFactory.apiService
     }
 }
