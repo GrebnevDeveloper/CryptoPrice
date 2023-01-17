@@ -44,7 +44,8 @@ class CoinItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
-        viewModel.getCoinItem(fromSymbol).observe(viewLifecycleOwner) {
+        viewModel.getCoinItem(fromSymbol)
+        viewModel.coinItem.observe(viewLifecycleOwner) {
             with(binding) {
                 tvFromSymbol.text = it.fromSymbol
                 tvToSymbol.text = it.toSymbol

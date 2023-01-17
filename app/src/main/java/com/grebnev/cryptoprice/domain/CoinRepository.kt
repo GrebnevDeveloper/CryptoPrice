@@ -1,10 +1,10 @@
 package com.grebnev.cryptoprice.domain
 
-import androidx.lifecycle.LiveData
 import com.grebnev.cryptoprice.domain.entity.Coin
+import kotlinx.coroutines.flow.Flow
 
 interface CoinRepository {
-    fun getCoinList(): LiveData<List<Coin>>
-    fun getCoinItem(fromSymbol: String): LiveData<Coin>
+    fun getCoinList(): Flow<List<Coin>>
+    fun getCoinItem(fromSymbol: String): Flow<Coin>
     fun loadData()
 }
