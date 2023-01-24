@@ -21,7 +21,9 @@ class CoinMapper @Inject constructor() {
         highDay = coinDto.highDay,
         lowDay = coinDto.lowDay,
         lastMarket = coinDto.lastMarket,
-        imageUrl = BASE_IMAGE_URL + coinDto.imageUrl
+        imageUrl = BASE_IMAGE_URL + coinDto.imageUrl,
+        mktCap = coinDto.mktCap,
+        changePct24Hour = coinDto.changePct24Hour
     )
 
     fun mapJsonContainerDtoToCoinDtoList(jsonContainer: CoinJsonContainerDto): List<CoinDto> {
@@ -56,8 +58,14 @@ class CoinMapper @Inject constructor() {
         highDay = coinDbModel.highDay,
         lowDay = coinDbModel.lowDay,
         lastMarket = coinDbModel.lastMarket,
-        imageUrl = coinDbModel.imageUrl
+        imageUrl = coinDbModel.imageUrl,
+        mktCap = coinDbModel.mktCap,
+        changePct24Hour = coinDbModel.changePct24Hour
     )
+
+    fun mapTimeLastUpdateDbModelToEntity(timestamp: Long?): String {
+        return convertTimestampToTime(timestamp)
+    }
 
     private fun convertTimestampToTime(timestamp: Long?): String {
         if (timestamp == null) return ""

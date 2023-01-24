@@ -40,4 +40,10 @@ class CoinRepositoryImpl @Inject constructor(
             RefreshDataWorker.makeRequest()
         )
     }
+
+    override fun getTimeLastUpdate(): Flow<String> {
+        return coinDao.getTimeLastUpdate().map {timeLastUpdate ->
+            mapper.mapTimeLastUpdateDbModelToEntity(timeLastUpdate)
+        }
+    }
 }

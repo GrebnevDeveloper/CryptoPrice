@@ -49,6 +49,9 @@ class CoinListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.timeLastUpdate.observe(viewLifecycleOwner) {timeLastUpdate ->
+            binding.tvTimeLastUpdate.text = timeLastUpdate
+        }
         val adapter = CoinAdapter(requireActivity())
         adapter.onCoinClickListener = object : CoinAdapter.OnCoinClickListener {
             override fun onCoinClick(coin: Coin) {

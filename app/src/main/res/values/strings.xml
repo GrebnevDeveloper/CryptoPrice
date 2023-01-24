@@ -8,4 +8,11 @@
     <string name="max_price">Максимум за день:</string>
     <string name="last_market">Последняя сделка:</string>
     <string name="last_update">Обновлено:</string>
+    <string name="change_pct_24_hour_template">%.2f%%</string>
+    <string name="price_template">%s $</string>
+    <string name="mktcap_template">%d $</string>
+    <string name="price_list_title">Цена</string>
+    <string name="coin">Монета</string>
+    <string name="change_pct_24">24ч.</string>
+    <string name="mktcap">Капитализация</string>
 </resources>
