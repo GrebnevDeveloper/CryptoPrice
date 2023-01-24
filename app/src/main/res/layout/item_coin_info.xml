@@ -7,58 +7,66 @@
     android:layout_margin="4dp"
     app:cardUseCompatPadding="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <ImageView
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:orientation="vertical">
+
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_logo_coin"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_margin="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearance="@style/CircleImageView"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/tv_symbols"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@id/tv_price"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="BTC / USD" />
+            android:textSize="15sp"
+            tools:text="BTC" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:layout_weight="2"
+            android:gravity="end"
             android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="7400.4" />
+            android:textSize="15sp"
+            tools:text="2052222.4$" />
 
         <TextView
-            android:id="@+id/tv_last_update"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_change_pct_24"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="108dp"
-            android:padding="16dp"
+            android:layout_weight="1.5"
+            android:gravity="end"
             android:textColor="@color/black"
-            android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Время последнего обновления: 22:04:56" />
+            android:textSize="15sp"
+            tools:text="10.5%" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_mkt_cap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_weight="2.5"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:layout_marginEnd="4dp"
+            tools:text="4700000000000$" />
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>
