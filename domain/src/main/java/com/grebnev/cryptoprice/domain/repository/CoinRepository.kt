@@ -7,4 +7,6 @@ interface CoinRepository {
     fun getCoinList(): Flow<List<Coin>>
     fun getCoinItem(fromSymbol: String): Flow<Coin>
     fun loadData()
+
+    fun getTimeLastUpdate(): Flow<String>
 }

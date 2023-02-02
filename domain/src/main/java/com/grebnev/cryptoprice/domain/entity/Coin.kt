@@ -8,5 +8,7 @@ data class Coin(
     val highDay: Double?,
     val lowDay: Double?,
     val lastMarket: String?,
-    val imageUrl: String
+    val imageUrl: String,
+    val mktCap: Double?,
+    val changePct24Hour: Double?
 )
