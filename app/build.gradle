@@ -42,8 +42,8 @@ dependencies {
 
     // Android
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // Coroutines
@@ -55,7 +55,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     // Lifecycle
-    def lifecycle_version="2.5.1"
+    def lifecycle_version="2.6.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
@@ -65,7 +65,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     // Worker
-    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+    implementation 'androidx.work:work-runtime-ktx:2.8.0'
 
     // Dagger
     def dagger_version = "2.44.2"
