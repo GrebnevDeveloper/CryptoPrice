@@ -1,11 +1,43 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '7.4.2' apply false
-    id 'com.android.library' version '7.4.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.21' apply false
-    id 'org.jetbrains.kotlin.jvm' version '1.8.0' apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.ktlint.analisis) apply true
+    alias(libs.plugins.detekt.analisis) apply true
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+subprojects {
+    apply(plugin: "org.jlleitschuh.gradle.ktlint")
+
+    ktlint {
+        version.set(libs.versions.ktlint.get())
+        enableExperimentalRules.set(true)
+        verbose.set(true)
+        android.set(true)
+        filter {
+            exclude("**/generated/**")
+        }
+    }
+
+    detekt {
+        toolVersion = libs.versions.detektPlugin.get()
+        config.setFrom(files("${project.rootDir}/config/detekt/detekt.yml"))
+        source.setFrom(files("src/main/java", "src/test/java"))
+        buildUponDefaultConfig = true
+        parallel = true
+    }
+
+    dependencies {
+        ktlint(libs.ktlint.rules)
+    }
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.layout.buildDirectory
+    subprojects.forEach { subproject ->
+        delete subproject.layout.buildDirectory
+    }
 }

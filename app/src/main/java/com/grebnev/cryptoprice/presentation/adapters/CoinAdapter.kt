@@ -10,19 +10,26 @@ import com.grebnev.cryptoprice.R
 import com.grebnev.cryptoprice.databinding.ItemCoinInfoBinding
 import com.grebnev.cryptoprice.domain.entity.Coin
 import com.squareup.picasso.Picasso
-import java.math.RoundingMode
 
-class CoinAdapter(private val context: Context) :
-    ListAdapter<Coin, CoinViewHolder>(CoinDiffCallback) {
+class CoinAdapter(
+    private val context: Context,
+) : ListAdapter<Coin, CoinViewHolder>(CoinDiffCallback) {
     var onCoinClickListener: OnCoinClickListener? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoinViewHolder {
-        val binding = ItemCoinInfoBinding
-            .inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): CoinViewHolder {
+        val binding =
+            ItemCoinInfoBinding
+                .inflate(LayoutInflater.from(parent.context), parent, false)
         return CoinViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: CoinViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: CoinViewHolder,
+        position: Int,
+    ) {
         val coin = getItem(position)
         val symbolsTemplate =
             context.resources.getString(com.grebnev.cryptoprice.R.string.symbols_template)
@@ -42,7 +49,7 @@ class CoinAdapter(private val context: Context) :
             tvMktCap.text = String.format(mktCapTemplate, coin.mktCap?.toInt())
             tvChangePct24.text = String.format(changePct24Template, coin.changePct24Hour)
             tvChangePct24.setTextColor(
-                ContextCompat.getColor(context, getColorForPct24Hour(coin.changePct24Hour))
+                ContextCompat.getColor(context, getColorForPct24Hour(coin.changePct24Hour)),
             )
         }
         holder.itemView.setOnClickListener {

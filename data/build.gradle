@@ -1,16 +1,16 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace 'com.grebnev.cryptoprice'
-    compileSdk 33
+    compileSdk 35
 
     defaultConfig {
         minSdk 21
-        targetSdk 33
+        targetSdk 35
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -23,36 +23,30 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 }
 
 dependencies {
     implementation project(path: ':domain')
 
-    // Retrofit
-    def retrofit_version ="2.9.0"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation(libs.retrofit)
+    implementation(libs.gson.converter)
 
-    // Room
-    def room_version = "2.5.0"
-    implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 
-    // Dagger
-    def dagger_version = "2.44.2"
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
 
-    // Worker
-    implementation 'androidx.work:work-runtime-ktx:2.8.0'
+    implementation(libs.work.rutime)
+    implementation(libs.work.rutime)
 
-    // Test
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    implementation(libs.timber.log)
+    testImplementation(libs.test.junit)
+    androidTestImplementation(libs.test.junit.android)
 }

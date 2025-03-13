@@ -11,40 +11,40 @@ import com.grebnev.cryptoprice.domain.usecase.LoadDataUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CoinListViewModel @Inject constructor(
-    private val loadDataUseCase: LoadDataUseCase,
-    private val getCoinListUseCase: GetCoinListUseCase,
-    private val getTimeLastUpdate: GetTimeLastUpdate
-) : ViewModel() {
+class CoinListViewModel
+    @Inject
+    constructor(
+        private val loadDataUseCase: LoadDataUseCase,
+        private val getCoinListUseCase: GetCoinListUseCase,
+        private val getTimeLastUpdate: GetTimeLastUpdate,
+    ) : ViewModel() {
+        private val _coinList = MutableLiveData<List<Coin>>()
+        val coinList: LiveData<List<Coin>>
+            get() = _coinList
 
-    private val _coinList = MutableLiveData<List<Coin>>()
-    val coinList: LiveData<List<Coin>>
-        get() = _coinList
+        private val _timeLastUpdate = MutableLiveData<String>()
+        val timeLastUpdate: LiveData<String>
+            get() = _timeLastUpdate
 
-    private val _timeLastUpdate = MutableLiveData<String>()
-    val timeLastUpdate: LiveData<String>
-        get() = _timeLastUpdate
-
-    private fun getLastUpdate() {
-        viewModelScope.launch {
-            getTimeLastUpdate().collect { time ->
-                _timeLastUpdate.value = time
+        private fun getLastUpdate() {
+            viewModelScope.launch {
+                getTimeLastUpdate().collect { time ->
+                    _timeLastUpdate.value = time
+                }
             }
         }
-    }
 
-    private fun getCoinList() {
-        viewModelScope.launch {
-            getCoinListUseCase().collect { coinList ->
-                _coinList.value = coinList
+        private fun getCoinList() {
+            viewModelScope.launch {
+                getCoinListUseCase().collect { coinList ->
+                    _coinList.value = coinList
+                }
             }
         }
-    }
 
-    init {
-        loadDataUseCase()
-        getCoinList()
-        getLastUpdate()
+        init {
+            loadDataUseCase()
+            getCoinList()
+            getLastUpdate()
+        }
     }
-
-}
