@@ -5,6 +5,25 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.ktlint.analisis) apply true
+}
+
+subprojects {
+    apply(plugin: "org.jlleitschuh.gradle.ktlint")
+
+    ktlint {
+        version.set(libs.versions.ktlint.get())
+        enableExperimentalRules.set(true)
+        verbose.set(true)
+        android.set(true)
+        filter {
+            exclude("**/generated/**")
+        }
+    }
+
+    dependencies {
+        ktlint(libs.ktlint.rules)
+    }
 }
 
 tasks.register('clean', Delete) {

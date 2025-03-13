@@ -7,20 +7,24 @@ import com.grebnev.cryptoprice.data.workers.CoinWorkerFactory
 import com.grebnev.cryptoprice.di.DaggerApplicationComponent
 import javax.inject.Inject
 
-class BaseApplication : Application(), Configuration.Provider {
-
+class BaseApplication :
+    Application(),
+    Configuration.Provider {
     @Inject
     lateinit var coinWorkerFactory: CoinWorkerFactory
 
     val component by lazy {
-        DaggerApplicationComponent.factory()
+        DaggerApplicationComponent
+            .factory()
             .create(this)
     }
 
     override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(coinWorkerFactory)
-            .build()
+        get() =
+            Configuration
+                .Builder()
+                .setWorkerFactory(coinWorkerFactory)
+                .build()
 
     override fun onCreate() {
         component.inject(this)

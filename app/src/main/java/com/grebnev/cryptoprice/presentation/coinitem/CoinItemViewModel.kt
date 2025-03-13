@@ -9,19 +9,20 @@ import com.grebnev.cryptoprice.domain.usecase.GetCoinItemUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CoinItemViewModel @Inject constructor(
-    private val getCoinItemUseCase: GetCoinItemUseCase
-) : ViewModel() {
+class CoinItemViewModel
+    @Inject
+    constructor(
+        private val getCoinItemUseCase: GetCoinItemUseCase,
+    ) : ViewModel() {
+        private val _coinItem = MutableLiveData<Coin>()
+        val coinItem: LiveData<Coin>
+            get() = _coinItem
 
-    private val _coinItem = MutableLiveData<Coin>()
-    val coinItem: LiveData<Coin>
-        get() = _coinItem
-
-    fun getCoinItem(fromSymbol: String) {
-        viewModelScope.launch {
-            getCoinItemUseCase(fromSymbol).collect { item ->
-                _coinItem.value = item
+        fun getCoinItem(fromSymbol: String) {
+            viewModelScope.launch {
+                getCoinItemUseCase(fromSymbol).collect { item ->
+                    _coinItem.value = item
+                }
             }
         }
     }
-}

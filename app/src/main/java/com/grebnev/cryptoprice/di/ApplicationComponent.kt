@@ -17,19 +17,20 @@ import dagger.Component
         DataModule::class,
         DomainModule::class,
         ViewModelModule::class,
-        WorkerModule::class
-    ]
+        WorkerModule::class,
+    ],
 )
 interface ApplicationComponent {
-
     fun inject(coinListFragment: CoinListFragment)
+
     fun inject(coinItemFragment: CoinItemFragment)
+
     fun inject(application: BaseApplication)
 
     @Component.Factory
     interface ApplicationComponentFactory {
         fun create(
-            @BindsInstance application: Application
+            @BindsInstance application: Application,
         ): ApplicationComponent
     }
 }

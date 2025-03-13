@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.work.rutime)
     implementation(libs.work.rutime)
 
+    implementation(libs.timber.log)
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.test.junit.android)
 }

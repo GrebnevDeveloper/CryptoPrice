@@ -11,16 +11,11 @@ import dagger.Provides
 
 @Module
 class DataModule {
+    @ApplicationScope
+    @Provides
+    fun provideDatabase(application: Application): CoinDao = AppDatabase.getInstance(application).coinDao()
 
     @ApplicationScope
     @Provides
-    fun provideDatabase(application: Application): CoinDao {
-        return AppDatabase.getInstance(application).coinDao()
-    }
-
-    @ApplicationScope
-    @Provides
-    fun provideApiService(): ApiService {
-        return ApiFactory.apiService
-    }
+    fun provideApiService(): ApiService = ApiFactory.apiService
 }

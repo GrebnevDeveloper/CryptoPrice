@@ -5,6 +5,8 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 
 interface ChildCoinWorkerFactory {
-
-    fun create(context: Context, workerParameters: WorkerParameters): ListenableWorker
+    fun create(
+        context: Context,
+        workerParameters: WorkerParameters,
+    ): ListenableWorker
 }
