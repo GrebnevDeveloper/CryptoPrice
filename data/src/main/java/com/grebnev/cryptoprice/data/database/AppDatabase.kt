@@ -8,22 +8,24 @@ import androidx.room.RoomDatabase
 @Database(entities = [CoinDbModel::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
-        private var INSTANCE: AppDatabase? = null
+        private var instance: AppDatabase? = null
         private const val DB_NAME = "coin.db"
         private val LOCK = Any()
 
         fun getInstance(context: Context): AppDatabase {
-            INSTANCE?.let {
+            instance?.let {
                 return it
             }
             synchronized(LOCK) {
-                INSTANCE?.let { return it }
-                val db = Room.databaseBuilder(
-                    context,
-                    AppDatabase::class.java,
-                    DB_NAME
-                ).build()
-                INSTANCE = db
+                instance?.let { return it }
+                val db =
+                    Room
+                        .databaseBuilder(
+                            context,
+                            AppDatabase::class.java,
+                            DB_NAME,
+                        ).build()
+                instance = db
                 return db
             }
         }

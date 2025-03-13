@@ -37,13 +37,16 @@ class CoinItemFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentCoinItemBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
         viewModel.getCoinItem(fromSymbol)
@@ -59,7 +62,6 @@ class CoinItemFragment : Fragment() {
                 Picasso.get().load(it.imageUrl).into(binding.ivLogoCoinDetail)
             }
         }
-
     }
 
     override fun onDestroyView() {
@@ -71,12 +73,12 @@ class CoinItemFragment : Fragment() {
         private const val EXTRA_FROM_SYMBOL = "from_symbol"
         private const val EMPTY_SYMBOL = ""
 
-        fun newInstance(fromSymbol: String): CoinItemFragment {
-            return CoinItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(EXTRA_FROM_SYMBOL, fromSymbol)
-                }
+        fun newInstance(fromSymbol: String): CoinItemFragment =
+            CoinItemFragment().apply {
+                arguments =
+                    Bundle().apply {
+                        putString(EXTRA_FROM_SYMBOL, fromSymbol)
+                    }
             }
-        }
     }
 }
