@@ -1,0 +1,45 @@
+[versions]
+agp = "8.9.0"
+kotlinAndroid = "2.0.20"
+kotlinJvm = "2.1.0"
+ksp = "2.1.10-1.0.31"
+coreKtx = "1.15.0"
+appcompat = "1.7.0"
+material = "1.12.0"
+constraint = "2.2.1"
+coroutines = "1.10.1"
+picasso = "2.71828"
+lifecycle = "2.8.7"
+room = "2.6.1"
+worker = "2.10.0"
+dagger = "2.55"
+retrofit = "2.11.0"
+junit = "4.13.2"
+junitAndroid = "1.2.1"
+
+[libraries]
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx"}
+android-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+android-material = { module = "com.google.android.material:material", version.ref = "material" }
+constraint-layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraint" }
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+images-picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
+lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+work-rutime = { module = "androidx.work:work-runtime-ktx", version.ref = "worker" }
+dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit"}
+gson-converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit"}
+test-junit = { module = "junit:junit", version.ref = "junit"}
+test-junit-android = { module = "androidx.test.ext:junit", version.ref = "junitAndroid"}
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinAndroid" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinJvm" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
