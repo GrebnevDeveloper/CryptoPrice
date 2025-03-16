@@ -44,7 +44,6 @@ class CoinListRepositoryImpl
                 Timber.e(throwable)
                 emit(ResultState.Error(ErrorHandler.getErrorTypeByError(throwable)))
             }
-
         private val refreshedListFlow = MutableSharedFlow<ResultState<List<Coin>, ErrorType>>()
 
         override val getCoinList: Flow<ResultState<List<Coin>, ErrorType>> =
