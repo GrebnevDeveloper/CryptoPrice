@@ -5,6 +5,10 @@ import com.grebnev.core.ResultState
 import com.grebnev.cryptoprice.domain.entity.Coin
 import kotlinx.coroutines.flow.Flow
 
-interface CoinRepository {
-    fun getCoinItem(fromSymbol: String): Flow<ResultState<Coin, ErrorType>>
+interface CoinListRepository {
+    val getCoinList: Flow<ResultState<List<Coin>, ErrorType>>
+
+    suspend fun loadData()
+
+    fun getTimeLastUpdate(): Flow<String>
 }

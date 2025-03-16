@@ -1,12 +1,12 @@
 package com.grebnev.cryptoprice.domain.usecase
 
-import com.grebnev.cryptoprice.domain.repository.CoinRepository
+import com.grebnev.cryptoprice.domain.repository.CoinListRepository
 import javax.inject.Inject
 
 class LoadDataUseCase
     @Inject
     constructor(
-        private val repository: CoinRepository,
+        private val repository: CoinListRepository,
     ) {
-        operator fun invoke() = repository.loadData()
+        suspend operator fun invoke() = repository.loadData()
     }
