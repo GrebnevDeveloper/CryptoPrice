@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
+import com.google.android.material.snackbar.Snackbar
 import com.grebnev.cryptoprice.R
 import com.grebnev.cryptoprice.databinding.FragmentCoinListBinding
 import com.grebnev.cryptoprice.domain.entity.Coin
@@ -52,24 +54,37 @@ class CoinListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.timeLastUpdate.observe(viewLifecycleOwner) { timeLastUpdate ->
-            binding.tvTimeLastUpdate.text = timeLastUpdate
-        }
-        val adapter = CoinAdapter(requireActivity())
-        adapter.onCoinClickListener =
-            object : CoinAdapter.OnCoinClickListener {
-                override fun onCoinClick(coin: Coin) {
-                    if (isLandscapeOrientation()) {
-                        requireActivity().supportFragmentManager.popBackStack()
-                        launchCoinItemFragment(R.id.second_container, coin)
-                    } else {
-                        launchCoinItemFragment(R.id.main_container, coin)
-                    }
+        viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
+            when (screen) {
+                is CoinListScreenState.Error -> {
+                    Snackbar.make(binding.root, screen.message, Snackbar.LENGTH_LONG).show()
+                }
+                CoinListScreenState.Initial -> {
+                }
+                CoinListScreenState.Loading -> {
+                    binding.rvCoinPriceList.visibility = View.GONE
+                    binding.pbLoadingIndicator.visibility = View.VISIBLE
+                }
+                is CoinListScreenState.Success -> {
+                    binding.tvTimeLastUpdate.text = screen.timeLastUpdate
+                    val adapter = CoinAdapter(requireActivity())
+                    adapter.onCoinClickListener =
+                        object : CoinAdapter.OnCoinClickListener {
+                            override fun onCoinClick(coin: Coin) {
+                                if (isLandscapeOrientation()) {
+                                    requireActivity().supportFragmentManager.popBackStack()
+                                    launchCoinItemFragment(R.id.second_container, coin)
+                                } else {
+                                    launchCoinItemFragment(R.id.main_container, coin)
+                                }
+                            }
+                        }
+                    binding.rvCoinPriceList.adapter = adapter
+                    adapter.submitList(screen.coins)
+                    binding.rvCoinPriceList.visibility = View.VISIBLE
+                    binding.pbLoadingIndicator.visibility = View.GONE
                 }
             }
-        binding.rvCoinPriceList.adapter = adapter
-        viewModel.coinList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
         }
     }
 

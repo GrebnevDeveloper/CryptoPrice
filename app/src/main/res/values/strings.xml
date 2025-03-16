@@ -15,4 +15,5 @@
     <string name="coin">Монета</string>
     <string name="change_pct_24">24ч.</string>
     <string name="mktcap">Капитализация</string>
+    <string name="loading">Загрузка...</string>
 </resources>

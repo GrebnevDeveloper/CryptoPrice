@@ -3,8 +3,10 @@ package com.grebnev.cryptoprice.presentation.base
 import android.app.Application
 import androidx.work.Configuration
 import androidx.work.WorkManager
+import com.grebnev.cryptoprice.BuildConfig
 import com.grebnev.cryptoprice.data.workers.CoinWorkerFactory
 import com.grebnev.cryptoprice.di.DaggerApplicationComponent
+import timber.log.Timber
 import javax.inject.Inject
 
 class BaseApplication :
@@ -29,6 +31,9 @@ class BaseApplication :
     override fun onCreate() {
         component.inject(this)
         super.onCreate()
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
         WorkManager.initialize(this, workManagerConfiguration)
     }
 }
