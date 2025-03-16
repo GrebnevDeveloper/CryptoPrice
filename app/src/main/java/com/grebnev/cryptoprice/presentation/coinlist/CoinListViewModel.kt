@@ -1,14 +1,20 @@
 package com.grebnev.cryptoprice.presentation.coinlist
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.grebnev.core.ErrorType
+import com.grebnev.core.ResultState
 import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.usecase.GetCoinListUseCase
 import com.grebnev.cryptoprice.domain.usecase.GetTimeLastUpdate
 import com.grebnev.cryptoprice.domain.usecase.LoadDataUseCase
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class CoinListViewModel
@@ -18,33 +24,57 @@ class CoinListViewModel
         private val getCoinListUseCase: GetCoinListUseCase,
         private val getTimeLastUpdate: GetTimeLastUpdate,
     ) : ViewModel() {
-        private val _coinList = MutableLiveData<List<Coin>>()
-        val coinList: LiveData<List<Coin>>
-            get() = _coinList
+        private val exceptionHandler =
+            CoroutineExceptionHandler { _, throwable ->
+                Timber.e(throwable)
+            }
+        private val coinListFlow = getCoinListUseCase()
 
-        private val _timeLastUpdate = MutableLiveData<String>()
-        val timeLastUpdate: LiveData<String>
-            get() = _timeLastUpdate
+        val screenState =
+            coinListFlow
+                .map { mapResultStateToScreenState(it) }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.Lazily,
+                    initialValue = CoinListScreenState.Loading,
+                )
+
+        private fun mapResultStateToScreenState(
+            coinListSate: ResultState<List<Coin>, ErrorType>,
+        ): CoinListScreenState =
+            when (coinListSate) {
+                is ResultState.Error ->
+                    CoinListScreenState.Error(coinListSate.error.type)
+
+                ResultState.Initial ->
+                    CoinListScreenState.Loading
+
+                is ResultState.Success -> {
+                    CoinListScreenState.Success(
+                        coinListSate.data,
+                        timeLastUpdateState.value,
+                    )
+                }
+            }
+
+        private val timeLastUpdateState = MutableStateFlow<String>("Loading...")
 
         private fun getLastUpdate() {
-            viewModelScope.launch {
+            viewModelScope.launch(exceptionHandler) {
                 getTimeLastUpdate().collect { time ->
-                    _timeLastUpdate.value = time
+                    timeLastUpdateState.value = time
                 }
             }
         }
 
-        private fun getCoinList() {
-            viewModelScope.launch {
-                getCoinListUseCase().collect { coinList ->
-                    _coinList.value = coinList
-                }
+        private fun loadCoinList() {
+            viewModelScope.launch(exceptionHandler) {
+                loadDataUseCase()
             }
         }
 
         init {
-            loadDataUseCase()
-            getCoinList()
+            loadCoinList()
             getLastUpdate()
         }
     }

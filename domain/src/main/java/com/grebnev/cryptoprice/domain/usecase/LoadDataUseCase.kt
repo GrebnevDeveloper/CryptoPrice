@@ -8,5 +8,5 @@ class LoadDataUseCase
     constructor(
         private val repository: CoinListRepository,
     ) {
-        operator fun invoke() = repository.loadData()
+        suspend operator fun invoke() = repository.loadData()
     }
