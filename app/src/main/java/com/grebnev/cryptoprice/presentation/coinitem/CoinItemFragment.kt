@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import com.grebnev.cryptoprice.databinding.FragmentCoinItemBinding
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
@@ -50,16 +51,26 @@ class CoinItemFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
         viewModel.getCoinItem(fromSymbol)
-        viewModel.coinItem.observe(viewLifecycleOwner) {
-            with(binding) {
-                tvFromSymbol.text = it.fromSymbol
-                tvToSymbol.text = it.toSymbol
-                tvPrice.text = it.price.toString()
-                tvMinPrice.text = it.lowDay.toString()
-                tvMaxPrice.text = it.highDay.toString()
-                tvLastMarket.text = it.lastMarket
-                tvLastUpdate.text = it.lastUpdate
-                Picasso.get().load(it.imageUrl).into(binding.ivLogoCoinDetail)
+        viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
+            when (screen) {
+                is CoinItemScreenState.Error -> {
+                }
+                CoinItemScreenState.Initial -> {
+                }
+                CoinItemScreenState.Loading -> {
+                }
+                is CoinItemScreenState.Success -> {
+                    with(binding) {
+                        tvFromSymbol.text = screen.coin.fromSymbol
+                        tvToSymbol.text = screen.coin.toSymbol
+                        tvPrice.text = screen.coin.price.toString()
+                        tvMinPrice.text = screen.coin.lowDay.toString()
+                        tvMaxPrice.text = screen.coin.highDay.toString()
+                        tvLastMarket.text = screen.coin.lastMarket
+                        tvLastUpdate.text = screen.coin.lastUpdate
+                        Picasso.get().load(screen.coin.imageUrl).into(binding.ivLogoCoinDetail)
+                    }
+                }
             }
         }
     }
