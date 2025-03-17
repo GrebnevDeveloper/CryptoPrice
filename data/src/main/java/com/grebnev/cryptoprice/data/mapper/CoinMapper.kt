@@ -3,9 +3,9 @@ package com.grebnev.cryptoprice.data.mapper
 import com.google.gson.Gson
 import com.grebnev.cryptoprice.data.database.CoinDbModel
 import com.grebnev.cryptoprice.data.network.ApiFactory.BASE_IMAGE_URL
-import com.grebnev.cryptoprice.data.network.model.CoinDto
-import com.grebnev.cryptoprice.data.network.model.CoinJsonContainerDto
-import com.grebnev.cryptoprice.data.network.model.CoinNameListDto
+import com.grebnev.cryptoprice.data.network.model.coin.CoinDto
+import com.grebnev.cryptoprice.data.network.model.coin.CoinJsonContainerDto
+import com.grebnev.cryptoprice.data.network.model.coin.CoinNameListDto
 import com.grebnev.cryptoprice.domain.entity.Coin
 import java.sql.Timestamp
 import java.text.SimpleDateFormat

@@ -35,8 +35,8 @@ dependencies {
     implementation project(path: ':domain')
     implementation project(path: ':core')
 
-    implementation(libs.retrofit)
-    implementation(libs.gson.converter)
+    implementation(platform(libs.okhttp3.bom))
+    implementation(libs.bundles.network)
 
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
