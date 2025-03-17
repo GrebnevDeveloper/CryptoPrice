@@ -9,6 +9,7 @@ import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.usecase.GetBarsForCoinUseCase
 import com.grebnev.cryptoprice.domain.usecase.GetCoinItemUseCase
 import com.grebnev.cryptoprice.presentation.coinitem.bars.TerminalBarsState
+import com.grebnev.cryptoprice.presentation.coinitem.bars.TimeFrame
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -36,25 +37,36 @@ class CoinItemViewModel
         }
 
         fun getBarsForCoin(
-            timeFrame: String,
+            timeFrame: TimeFrame,
             fromSymbol: String,
         ) {
             viewModelScope.launch {
+                _barState.value = TerminalBarsState.Loading
                 getBarsForCoinUseCase(
-                    timeFrame = timeFrame,
+                    timeFrame = timeFrame.value,
                     fromSymbol = fromSymbol,
-                ).map { mapResultStateToBarState(it) }
-                    .collect { _barState.value = it }
+                ).map { resultState ->
+                    mapResultStateToBarState(
+                        resultState = resultState,
+                        timeFrame = timeFrame,
+                    )
+                }.collect { _barState.value = it }
             }
         }
 
         private fun mapResultStateToBarState(
             resultState: ResultState<List<Bar>, ErrorType>,
+            timeFrame: TimeFrame,
         ): TerminalBarsState =
             when (val currentState = resultState) {
                 is ResultState.Error -> TerminalBarsState.Error(currentState.error.type)
                 ResultState.Initial -> TerminalBarsState.Loading
-                is ResultState.Success -> TerminalBarsState.Success(currentState.data)
+                is ResultState.Success -> {
+                    TerminalBarsState.Content(
+                        bars = currentState.data,
+                        timeFrame = timeFrame,
+                    )
+                }
             }
 
         private fun mapResultStateToScreenState(

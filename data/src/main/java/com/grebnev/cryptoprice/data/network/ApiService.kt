@@ -27,7 +27,7 @@ interface ApiService {
         @Path(PATH_PARAM_TIME_FRAME) timeFrame: String,
         @Query(QUERY_PARAM_API_KEY) apiKey: String = "",
         @Query(QUERY_PARAM_FROM_SYMBOL) fSyms: String?,
-        @Query(QUERY_PARAM_LIMIT) limit: Int = 10,
+        @Query(QUERY_PARAM_LIMIT) limit: Int = 2000,
         @Query(QUERY_PARAM_TO_SYMBOL) tSym: String = CURRENCY,
     ): BarContainerDto
 

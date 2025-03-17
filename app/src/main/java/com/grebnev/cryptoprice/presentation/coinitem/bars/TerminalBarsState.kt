@@ -7,8 +7,9 @@ sealed class TerminalBarsState {
 
     data object Loading : TerminalBarsState()
 
-    data class Success(
+    data class Content(
         val bars: List<Bar>,
+        val timeFrame: TimeFrame,
     ) : TerminalBarsState()
 
     data class Error(
