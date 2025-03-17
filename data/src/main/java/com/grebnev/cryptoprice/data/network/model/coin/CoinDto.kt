@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.data.network.model
+package com.grebnev.cryptoprice.data.network.model.coin
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
