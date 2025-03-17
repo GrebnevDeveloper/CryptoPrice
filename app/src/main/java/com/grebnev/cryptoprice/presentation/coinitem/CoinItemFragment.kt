@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.Modifier
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.grebnev.cryptoprice.databinding.FragmentCoinItemBinding
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
-import com.grebnev.cryptoprice.presentation.coinitem.bars.TerminalBarsState
+import com.grebnev.cryptoprice.presentation.coinitem.bars.TerminalScreen
+import com.grebnev.cryptoprice.presentation.coinitem.bars.TimeFrame
 import com.squareup.picasso.Picasso
-import timber.log.Timber
 import javax.inject.Inject
 
 class CoinItemFragment : Fragment() {
@@ -53,7 +54,7 @@ class CoinItemFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
         displayCoinInfo(fromSymbol)
-        displayTerminalBars(timeFrame = "histoday", fromSymbol = fromSymbol)
+        displayTerminalBars(fromSymbol = fromSymbol)
     }
 
     private fun displayCoinInfo(fromSymbol: String) {
@@ -83,24 +84,20 @@ class CoinItemFragment : Fragment() {
     }
 
     private fun displayTerminalBars(
-        timeFrame: String,
+        timeFrame: TimeFrame = TimeFrame.DAILY,
         fromSymbol: String,
     ) {
         viewModel.getBarsForCoin(
             timeFrame = timeFrame,
             fromSymbol = fromSymbol,
         )
-        viewModel.barState.asLiveData().observe(viewLifecycleOwner) { terminal ->
-            when (terminal) {
-                is TerminalBarsState.Error -> {
-                }
-                TerminalBarsState.Initial -> {
-                }
-                TerminalBarsState.Loading -> {
-                }
-                is TerminalBarsState.Success -> {
-                    Timber.d("List bars ${terminal.bars}")
-                }
+        viewModel.barState.asLiveData().observe(viewLifecycleOwner) {
+            binding.composeViewTerminalBars.setContent {
+                TerminalScreen(
+                    modifier = Modifier,
+                    fromSymbol = fromSymbol,
+                    viewModel = viewModel,
+                )
             }
         }
     }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
 }
 
@@ -32,6 +33,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        compose true
     }
     namespace 'com.grebnev.cryptoprice'
 }
@@ -40,6 +42,10 @@ dependencies {
     implementation project(path: ':data')
     implementation project(path: ':domain')
     implementation project(path: ':core')
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.bundles.compose)
+    implementation(libs.bundles.ui)
 
     implementation(libs.core.ktx)
     implementation(libs.android.appcompat)
@@ -66,4 +72,5 @@ dependencies {
     implementation(libs.timber.log)
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.test.junit.android)
+    androidTestImplementation(libs.bundles.ui.test)
 }

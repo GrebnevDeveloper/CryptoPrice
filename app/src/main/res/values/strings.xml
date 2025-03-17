@@ -16,4 +16,7 @@
     <string name="change_pct_24">24ч.</string>
     <string name="mktcap">Капитализация</string>
     <string name="loading">Загрузка...</string>
+    <string name="minute">MIN</string>
+    <string name="hourly">HOUR</string>
+    <string name="daily">DAY</string>
 </resources>
