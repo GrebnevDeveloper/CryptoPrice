@@ -2,7 +2,6 @@ package com.grebnev.cryptoprice.domain.entity
 
 import java.io.Serializable
 import java.util.Calendar
-import java.util.Date
 
 data class Bar(
     val high: Double,
@@ -14,7 +13,7 @@ data class Bar(
     val calendar: Calendar
         get() {
             return Calendar.getInstance().apply {
-                time = Date(this@Bar.time)
+                timeInMillis = this@Bar.time * 1000
             }
         }
 }
