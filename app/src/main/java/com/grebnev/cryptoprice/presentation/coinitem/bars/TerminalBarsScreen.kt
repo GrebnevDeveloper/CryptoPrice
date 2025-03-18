@@ -302,6 +302,8 @@ private fun DrawScope.drawTimeDelimiter(
     val minutes = calendar.get(Calendar.MINUTE)
     val hours = calendar.get(Calendar.HOUR_OF_DAY)
     val day = calendar.get(Calendar.DAY_OF_MONTH)
+    val month = calendar.get(Calendar.MONTH)
+    val year = calendar.get(Calendar.YEAR)
 
     // Определяем, нужно ли рисовать разделитель времени
     val shouldDrawDelimiter =
@@ -310,9 +312,14 @@ private fun DrawScope.drawTimeDelimiter(
                 minutes == 0
             }
 
-            TimeFrame.HOURLY, TimeFrame.DAILY -> {
+            TimeFrame.HOURLY -> {
                 val nextBarDay = nextBar?.calendar?.get(Calendar.DAY_OF_MONTH)
                 day != nextBarDay
+            }
+
+            TimeFrame.DAILY -> {
+                val nextBarMonth = nextBar?.calendar?.get(Calendar.MONTH)
+                month != nextBarMonth
             }
         }
     if (!shouldDrawDelimiter) return
@@ -337,8 +344,12 @@ private fun DrawScope.drawTimeDelimiter(
                 String.format(Locale.getDefault(), "%02d:00", hours)
             }
 
-            TimeFrame.HOURLY, TimeFrame.DAILY -> {
+            TimeFrame.HOURLY -> {
                 String.format("%s %s", day, nameOfMonth)
+            }
+
+            TimeFrame.DAILY -> {
+                String.format("%s %s", nameOfMonth, year)
             }
         }
     val textLayoutResult =

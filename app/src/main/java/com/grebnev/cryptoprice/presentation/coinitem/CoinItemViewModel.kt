@@ -62,8 +62,10 @@ class CoinItemViewModel
                 is ResultState.Error -> TerminalBarsState.Error(currentState.error.type)
                 ResultState.Initial -> TerminalBarsState.Loading
                 is ResultState.Success -> {
+                    val currentBars = currentState.data
+                    val sortedBar = currentBars.sortedByDescending { it.time }
                     TerminalBarsState.Content(
-                        bars = currentState.data,
+                        bars = sortedBar,
                         timeFrame = timeFrame,
                     )
                 }
