@@ -2,6 +2,7 @@ package com.grebnev.cryptoprice.presentation.coinitem
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.grebnev.core.ErrorHandler
 import com.grebnev.core.ErrorType
 import com.grebnev.core.ResultState
 import com.grebnev.cryptoprice.domain.entity.Bar
@@ -10,10 +11,12 @@ import com.grebnev.cryptoprice.domain.usecase.GetBarsForCoinUseCase
 import com.grebnev.cryptoprice.domain.usecase.GetCoinItemUseCase
 import com.grebnev.cryptoprice.presentation.coinitem.bars.TerminalBarsState
 import com.grebnev.cryptoprice.presentation.coinitem.bars.TimeFrame
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class CoinItemViewModel
@@ -22,6 +25,12 @@ class CoinItemViewModel
         private val getCoinItemUseCase: GetCoinItemUseCase,
         private val getBarsForCoinUseCase: GetBarsForCoinUseCase,
     ) : ViewModel() {
+        private val coroutineExceptionHandler =
+            CoroutineExceptionHandler { _, throwable ->
+                Timber.e(throwable)
+                val typeError = ErrorHandler.getErrorTypeByError(throwable)
+                _barState.value = TerminalBarsState.Error(typeError.type)
+            }
         private val _screenState = MutableStateFlow<CoinItemScreenState>(CoinItemScreenState.Loading)
         val screenState: StateFlow<CoinItemScreenState> = _screenState
 
@@ -40,7 +49,7 @@ class CoinItemViewModel
             timeFrame: TimeFrame,
             fromSymbol: String,
         ) {
-            viewModelScope.launch {
+            viewModelScope.launch(coroutineExceptionHandler) {
                 _barState.value = TerminalBarsState.Loading
                 getBarsForCoinUseCase(
                     timeFrame = timeFrame.value,
@@ -59,7 +68,7 @@ class CoinItemViewModel
             timeFrame: TimeFrame,
             fromSymbol: String,
         ) {
-            viewModelScope.launch {
+            viewModelScope.launch(coroutineExceptionHandler) {
                 var isFullScreen = false
                 if (barState.value is TerminalBarsState.Content) {
                     isFullScreen = (barState.value as TerminalBarsState.Content).isFullScreen

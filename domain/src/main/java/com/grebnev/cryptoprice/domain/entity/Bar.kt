@@ -13,7 +13,11 @@ data class Bar(
     val calendar: Calendar
         get() {
             return Calendar.getInstance().apply {
-                timeInMillis = this@Bar.time * 1000
+                timeInMillis = this@Bar.time * MILLISECONDS_IN_SECONDS
             }
         }
+
+    companion object {
+        private const val MILLISECONDS_IN_SECONDS = 1000L
+    }
 }
