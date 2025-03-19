@@ -10,6 +10,7 @@ sealed class TerminalBarsState {
     data class Content(
         val bars: List<Bar>,
         val timeFrame: TimeFrame,
+        val isFullScreen: Boolean,
     ) : TerminalBarsState()
 
     data class Error(
