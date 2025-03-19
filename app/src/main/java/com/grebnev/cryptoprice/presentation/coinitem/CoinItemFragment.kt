@@ -12,6 +12,7 @@ import androidx.lifecycle.asLiveData
 import com.grebnev.cryptoprice.databinding.FragmentCoinItemBinding
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
+import com.grebnev.cryptoprice.presentation.coinitem.bars.TerminalBarsState
 import com.grebnev.cryptoprice.presentation.coinitem.bars.TerminalScreen
 import com.grebnev.cryptoprice.presentation.coinitem.bars.TimeFrame
 import com.squareup.picasso.Picasso
@@ -87,16 +88,23 @@ class CoinItemFragment : Fragment() {
         timeFrame: TimeFrame = TimeFrame.DAILY,
         fromSymbol: String,
     ) {
-        viewModel.getBarsForCoin(
+        viewModel.loadBarsForCoin(
             timeFrame = timeFrame,
             fromSymbol = fromSymbol,
         )
-        viewModel.barState.asLiveData().observe(viewLifecycleOwner) {
+        viewModel.barState.asLiveData().observe(viewLifecycleOwner) { terminalBarsState ->
+            if (terminalBarsState is TerminalBarsState.Content) {
+                val isVisibleCoinInfo = if (terminalBarsState.isFullScreen) View.GONE else View.VISIBLE
+                binding.clCoinInfo.visibility = isVisibleCoinInfo
+            }
             binding.composeViewTerminalBars.setContent {
                 TerminalScreen(
                     modifier = Modifier,
-                    fromSymbol = fromSymbol,
-                    viewModel = viewModel,
+                    terminalBarsState = terminalBarsState,
+                    onTimeFrameSelected = { timeFrame ->
+                        viewModel.changeTimeFrameStatus(timeFrame, fromSymbol)
+                    },
+                    onChangedStatusFullScreenListener = { viewModel.changeFullScreenStatus() },
                 )
             }
         }

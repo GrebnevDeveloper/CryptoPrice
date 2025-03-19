@@ -10,13 +10,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CloseFullscreen
+import androidx.compose.material.icons.filled.OpenInFull
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -35,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.grebnev.cryptoprice.R
 import com.grebnev.cryptoprice.domain.entity.Bar
-import com.grebnev.cryptoprice.presentation.coinitem.CoinItemViewModel
 import java.util.Calendar
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -45,25 +48,22 @@ private const val MIN_VISIBLE_BARS_COUNT = 20
 @Composable
 fun TerminalScreen(
     modifier: Modifier = Modifier,
-    fromSymbol: String,
-    viewModel: CoinItemViewModel,
+    terminalBarsState: TerminalBarsState,
+    onTimeFrameSelected: (TimeFrame) -> Unit,
+    onChangedStatusFullScreenListener: () -> Unit,
 ) {
-    // Получаем текущее состояние из viewModel
-    val terminalBarsState = viewModel.barState.collectAsState()
-    val currentTerminalBarsState = terminalBarsState.value
     // В зависимости от текущего состояния экрана отображаем соответствующий UI
-    when (currentTerminalBarsState) {
+    when (terminalBarsState) {
         is TerminalBarsState.Content -> {
             // Если состояние - Content, отображаем основной контент экрана
             TerminalScreenContent(
-                bars = currentTerminalBarsState.bars, // Список баров (данные графика)
-                timeFrame = currentTerminalBarsState.timeFrame, // Выбранный временной интервал
-                onTimeFrameSelected = {
-                    viewModel.getBarsForCoin(
-                        timeFrame = it,
-                        fromSymbol = fromSymbol,
-                    )
+                bars = terminalBarsState.bars, // Список баров (данные графика)
+                timeFrame = terminalBarsState.timeFrame, // Выбранный временной интервал
+                onTimeFrameSelected = { timeFrame ->
+                    onTimeFrameSelected(timeFrame)
                 }, // Обработчик выбора временного интервала
+                onChangedStatusFullScreenListener = onChangedStatusFullScreenListener,
+                isFullScreen = terminalBarsState.isFullScreen,
                 modifier = modifier,
             )
         }
@@ -95,6 +95,8 @@ private fun TerminalScreenContent(
     bars: List<Bar>, // Список баров (данные графика)
     timeFrame: TimeFrame, // Выбранный временной интервал
     onTimeFrameSelected: (TimeFrame) -> Unit, // Обработчик выбора временного интервала
+    onChangedStatusFullScreenListener: () -> Unit, // Слушатель изменеия статуса полного экрана
+    isFullScreen: Boolean,
     modifier: Modifier = Modifier,
 ) {
     // Состояние терминала, которое зависит от списка баров
@@ -119,11 +121,44 @@ private fun TerminalScreenContent(
         )
     }
 
-    // Отображаем выбор временного интервала
-    TimeFrames(
-        selectedFrame = timeFrame,
+    ChangeStatusTerminal(
+        timeFrame = timeFrame,
         onTimeFrameSelected = onTimeFrameSelected,
+        onChangedStatusFullScreenListener = onChangedStatusFullScreenListener,
+        isFullScreen = isFullScreen,
     )
+}
+
+@Composable
+private fun ChangeStatusTerminal(
+    timeFrame: TimeFrame,
+    onTimeFrameSelected: (TimeFrame) -> Unit,
+    onChangedStatusFullScreenListener: () -> Unit,
+    isFullScreen: Boolean,
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopStart,
+    ) {
+        Row(
+            modifier =
+                Modifier
+                    .wrapContentSize()
+                    .padding(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            // Отображаем выбор временного интервала
+            TimeFrames(
+                selectedFrame = timeFrame,
+                onTimeFrameSelected = onTimeFrameSelected,
+            )
+            // Иконка полноэкранного режима
+            FullScreenIcon(
+                isFullScreen = isFullScreen,
+                onChangedStatusFullScreenListener = onChangedStatusFullScreenListener,
+            )
+        }
+    }
 }
 
 @Composable
@@ -131,38 +166,55 @@ private fun TimeFrames(
     selectedFrame: TimeFrame, // Выбранный временной интервал
     onTimeFrameSelected: (TimeFrame) -> Unit, // Обработчик выбора временного интервала
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize(), // Занимаем весь доступный размер
-        contentAlignment = Alignment.TopStart, // Выравниваем содержимое в верхний левый угол
+    // Отображаем строку с кнопками выбора временного интервала
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        // Отображаем строку с кнопками выбора временного интервала
-        Row(
-            modifier =
-                Modifier
-                    .wrapContentSize()
-                    .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            // Для каждого временного интервала создаем кнопку
-            TimeFrame.entries.forEach { timeFrame ->
-                val labelResId =
-                    when (timeFrame) {
-                        TimeFrame.MINUTE -> R.string.minute
-                        TimeFrame.HOURLY -> R.string.hourly
-                        TimeFrame.DAILY -> R.string.daily
-                    }
-                val isSelected = timeFrame == selectedFrame // Проверяем, выбран ли текущий интервал
-                AssistChip(
-                    onClick = { onTimeFrameSelected(timeFrame) }, // Обработчик нажатия
-                    label = { Text(stringResource(labelResId)) }, // Текст кнопки
-                    colors =
-                        AssistChipDefaults.assistChipColors(
-                            containerColor = if (isSelected) Color.White else Color.Black, // Цвет фона
-                            labelColor = if (isSelected) Color.Black else Color.White, // Цвет текста
-                        ),
-                )
-            }
+        // Для каждого временного интервала создаем кнопку
+        TimeFrame.entries.forEach { timeFrame ->
+            val labelResId =
+                when (timeFrame) {
+                    TimeFrame.MINUTE -> R.string.minute
+                    TimeFrame.HOURLY -> R.string.hourly
+                    TimeFrame.DAILY -> R.string.daily
+                }
+            val isSelected = timeFrame == selectedFrame // Проверяем, выбран ли текущий интервал
+            AssistChip(
+                onClick = { onTimeFrameSelected(timeFrame) }, // Обработчик нажатия
+                label = { Text(stringResource(labelResId)) }, // Текст кнопки
+                colors =
+                    AssistChipDefaults.assistChipColors(
+                        containerColor = if (isSelected) Color.White else Color.Black, // Цвет фона
+                        labelColor = if (isSelected) Color.Black else Color.White, // Цвет текста
+                    ),
+            )
         }
+    }
+}
+
+@Composable
+private fun FullScreenIcon(
+    isFullScreen: Boolean,
+    onChangedStatusFullScreenListener: () -> Unit,
+) {
+    IconButton(
+        onClick = onChangedStatusFullScreenListener,
+    ) {
+        Icon(
+            imageVector =
+                if (isFullScreen) {
+                    Icons.Default.CloseFullscreen
+                } else {
+                    Icons.Default.OpenInFull
+                },
+            contentDescription =
+                if (isFullScreen) {
+                    "Exit Fullscreen"
+                } else {
+                    "Enter Fullscreen"
+                },
+            tint = Color.White,
+        )
     }
 }
 

@@ -36,7 +36,7 @@ class CoinItemViewModel
             }
         }
 
-        fun getBarsForCoin(
+        fun loadBarsForCoin(
             timeFrame: TimeFrame,
             fromSymbol: String,
         ) {
@@ -49,14 +49,46 @@ class CoinItemViewModel
                     mapResultStateToBarState(
                         resultState = resultState,
                         timeFrame = timeFrame,
+                        isFullScreen = false,
                     )
                 }.collect { _barState.value = it }
+            }
+        }
+
+        fun changeTimeFrameStatus(
+            timeFrame: TimeFrame,
+            fromSymbol: String,
+        ) {
+            viewModelScope.launch {
+                var isFullScreen = false
+                if (barState.value is TerminalBarsState.Content) {
+                    isFullScreen = (barState.value as TerminalBarsState.Content).isFullScreen
+                }
+                _barState.value = TerminalBarsState.Loading
+                getBarsForCoinUseCase(
+                    timeFrame = timeFrame.value,
+                    fromSymbol = fromSymbol,
+                ).map { resultState ->
+                    mapResultStateToBarState(
+                        resultState = resultState,
+                        timeFrame = timeFrame,
+                        isFullScreen = isFullScreen,
+                    )
+                }.collect { _barState.value = it }
+            }
+        }
+
+        fun changeFullScreenStatus() {
+            val currentBarsState = _barState.value
+            if (currentBarsState is TerminalBarsState.Content) {
+                _barState.value = currentBarsState.copy(isFullScreen = !currentBarsState.isFullScreen)
             }
         }
 
         private fun mapResultStateToBarState(
             resultState: ResultState<List<Bar>, ErrorType>,
             timeFrame: TimeFrame,
+            isFullScreen: Boolean,
         ): TerminalBarsState =
             when (val currentState = resultState) {
                 is ResultState.Error -> TerminalBarsState.Error(currentState.error.type)
@@ -67,6 +99,7 @@ class CoinItemViewModel
                     TerminalBarsState.Content(
                         bars = sortedBar,
                         timeFrame = timeFrame,
+                        isFullScreen = isFullScreen,
                     )
                 }
             }
