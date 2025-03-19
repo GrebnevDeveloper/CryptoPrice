@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloseFullscreen
 import androidx.compose.material.icons.filled.OpenInFull
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -49,19 +51,18 @@ private const val MIN_VISIBLE_BARS_COUNT = 20
 fun TerminalScreen(
     modifier: Modifier = Modifier,
     terminalBarsState: TerminalBarsState,
+    onRetryClickListener: () -> Unit,
     onTimeFrameSelected: (TimeFrame) -> Unit,
     onChangedStatusFullScreenListener: () -> Unit,
 ) {
-    // В зависимости от текущего состояния экрана отображаем соответствующий UI
     when (terminalBarsState) {
         is TerminalBarsState.Content -> {
-            // Если состояние - Content, отображаем основной контент экрана
             TerminalScreenContent(
-                bars = terminalBarsState.bars, // Список баров (данные графика)
-                timeFrame = terminalBarsState.timeFrame, // Выбранный временной интервал
+                bars = terminalBarsState.bars,
+                timeFrame = terminalBarsState.timeFrame,
                 onTimeFrameSelected = { timeFrame ->
                     onTimeFrameSelected(timeFrame)
-                }, // Обработчик выбора временного интервала
+                },
                 onChangedStatusFullScreenListener = onChangedStatusFullScreenListener,
                 isFullScreen = terminalBarsState.isFullScreen,
                 modifier = modifier,
@@ -69,24 +70,62 @@ fun TerminalScreen(
         }
 
         is TerminalBarsState.Loading -> {
-            // Если состояние - Loading, отображаем индикатор загрузки
             Box(
                 modifier =
                     modifier
                         .fillMaxSize()
                         .background(Color.Black),
-                // Черный фон
                 contentAlignment = Alignment.Center,
             ) {
-                CircularProgressIndicator() // Индикатор загрузки
+                CircularProgressIndicator()
             }
         }
 
-        is TerminalBarsState.Initial -> {
-            // Если состояние - Initial, ничего не отображаем (можно добавить логику инициализации)
-        }
+        is TerminalBarsState.Initial -> {}
 
-        is TerminalBarsState.Error -> TODO()
+        is TerminalBarsState.Error -> {
+            ErrorScreen(
+                errorMessage = terminalBarsState.message,
+                onRetryClickListener = onRetryClickListener,
+                modifier = modifier,
+            )
+        }
+    }
+}
+
+@Composable
+fun ErrorScreen(
+    errorMessage: String,
+    onRetryClickListener: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.Black),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                text = errorMessage,
+                color = Color.White,
+                fontSize = 16.sp,
+            )
+
+            IconButton(
+                onClick = onRetryClickListener,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "Retry",
+                    tint = Color.White,
+                )
+            }
+        }
     }
 }
 
@@ -96,7 +135,7 @@ private fun TerminalScreenContent(
     timeFrame: TimeFrame, // Выбранный временной интервал
     onTimeFrameSelected: (TimeFrame) -> Unit, // Обработчик выбора временного интервала
     onChangedStatusFullScreenListener: () -> Unit, // Слушатель изменеия статуса полного экрана
-    isFullScreen: Boolean,
+    isFullScreen: Boolean, // Статус полного экрана
     modifier: Modifier = Modifier,
 ) {
     // Состояние терминала, которое зависит от списка баров
@@ -166,7 +205,6 @@ private fun TimeFrames(
     selectedFrame: TimeFrame, // Выбранный временной интервал
     onTimeFrameSelected: (TimeFrame) -> Unit, // Обработчик выбора временного интервала
 ) {
-    // Отображаем строку с кнопками выбора временного интервала
     Row(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
@@ -180,12 +218,12 @@ private fun TimeFrames(
                 }
             val isSelected = timeFrame == selectedFrame // Проверяем, выбран ли текущий интервал
             AssistChip(
-                onClick = { onTimeFrameSelected(timeFrame) }, // Обработчик нажатия
-                label = { Text(stringResource(labelResId)) }, // Текст кнопки
+                onClick = { onTimeFrameSelected(timeFrame) },
+                label = { Text(stringResource(labelResId)) },
                 colors =
                     AssistChipDefaults.assistChipColors(
-                        containerColor = if (isSelected) Color.White else Color.Black, // Цвет фона
-                        labelColor = if (isSelected) Color.Black else Color.White, // Цвет текста
+                        containerColor = if (isSelected) Color.White else Color.Black,
+                        labelColor = if (isSelected) Color.Black else Color.White,
                     ),
             )
         }
@@ -262,7 +300,7 @@ private fun Chart(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(Color.Black) // Черный фон
+                .background(Color.Black)
                 .clipToBounds()
                 .padding(
                     top = 32.dp,
@@ -349,6 +387,7 @@ private fun DrawScope.drawTimeDelimiter(
     offsetX: Float, // Смещение по оси X
     textMeasurer: TextMeasurer, // Измеритель текста
 ) {
+    // Разбираем время для бара на отделные составляющие
     val calendar = bar.calendar
 
     val minutes = calendar.get(Calendar.MINUTE)
