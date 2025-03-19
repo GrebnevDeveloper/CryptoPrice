@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.Modifier
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.grebnev.cryptoprice.databinding.FragmentCoinItemBinding
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
+import com.grebnev.cryptoprice.presentation.coinitem.bars.TerminalBarsState
+import com.grebnev.cryptoprice.presentation.coinitem.bars.TerminalScreen
+import com.grebnev.cryptoprice.presentation.coinitem.bars.TimeFrame
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
@@ -50,6 +54,11 @@ class CoinItemFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
+        displayCoinInfo(fromSymbol)
+        displayTerminalBars(fromSymbol = fromSymbol)
+    }
+
+    private fun displayCoinInfo(fromSymbol: String) {
         viewModel.getCoinItem(fromSymbol)
         viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
             when (screen) {
@@ -71,6 +80,32 @@ class CoinItemFragment : Fragment() {
                         Picasso.get().load(screen.coin.imageUrl).into(binding.ivLogoCoinDetail)
                     }
                 }
+            }
+        }
+    }
+
+    private fun displayTerminalBars(
+        timeFrame: TimeFrame = TimeFrame.DAILY,
+        fromSymbol: String,
+    ) {
+        viewModel.loadBarsForCoin(timeFrame, fromSymbol)
+        viewModel.barState.asLiveData().observe(viewLifecycleOwner) { terminalBarsState ->
+            if (terminalBarsState is TerminalBarsState.Content) {
+                val isVisibleCoinInfo = if (terminalBarsState.isFullScreen) View.GONE else View.VISIBLE
+                binding.clCoinInfo.visibility = isVisibleCoinInfo
+            }
+            binding.composeViewTerminalBars.setContent {
+                TerminalScreen(
+                    modifier = Modifier,
+                    terminalBarsState = terminalBarsState,
+                    onRetryClickListener = {
+                        viewModel.loadBarsForCoin(timeFrame, fromSymbol)
+                    },
+                    onTimeFrameSelected = { timeFrame ->
+                        viewModel.changeTimeFrameStatus(timeFrame, fromSymbol)
+                    },
+                    onChangedStatusFullScreenListener = { viewModel.changeFullScreenStatus() },
+                )
             }
         }
     }

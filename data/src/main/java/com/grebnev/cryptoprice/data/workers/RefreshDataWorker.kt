@@ -58,7 +58,7 @@ class RefreshDataWorker(
     companion object {
         const val REFRESH_WORKER_NAME = "refresh_data_worker"
         const val ERROR_KEY = "error_key"
-        const val REFRESH_TIMEOUT = 10L
+        const val REFRESH_TIMEOUT = 60L
         const val REFRESH_TIMEOUT_AFTER_ERROR = 5000L
 
         fun makeRequest(): OneTimeWorkRequest = OneTimeWorkRequestBuilder<RefreshDataWorker>().build()
