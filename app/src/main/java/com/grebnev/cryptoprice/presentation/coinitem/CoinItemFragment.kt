@@ -88,10 +88,7 @@ class CoinItemFragment : Fragment() {
         timeFrame: TimeFrame = TimeFrame.DAILY,
         fromSymbol: String,
     ) {
-        viewModel.loadBarsForCoin(
-            timeFrame = timeFrame,
-            fromSymbol = fromSymbol,
-        )
+        viewModel.loadBarsForCoin(timeFrame, fromSymbol)
         viewModel.barState.asLiveData().observe(viewLifecycleOwner) { terminalBarsState ->
             if (terminalBarsState is TerminalBarsState.Content) {
                 val isVisibleCoinInfo = if (terminalBarsState.isFullScreen) View.GONE else View.VISIBLE
@@ -101,6 +98,9 @@ class CoinItemFragment : Fragment() {
                 TerminalScreen(
                     modifier = Modifier,
                     terminalBarsState = terminalBarsState,
+                    onRetryClickListener = {
+                        viewModel.loadBarsForCoin(timeFrame, fromSymbol)
+                    },
                     onTimeFrameSelected = { timeFrame ->
                         viewModel.changeTimeFrameStatus(timeFrame, fromSymbol)
                     },
