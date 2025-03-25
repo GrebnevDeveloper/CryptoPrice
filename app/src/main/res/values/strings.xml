@@ -19,4 +19,7 @@
     <string name="minute">MIN</string>
     <string name="hourly">HOUR</string>
     <string name="daily">DAY</string>
+    <string name="page_info">Info</string>
+    <string name="page_terminal">Terminal</string>
+    <string name="page_news">News</string>
 </resources>

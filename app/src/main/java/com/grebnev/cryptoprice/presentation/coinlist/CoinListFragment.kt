@@ -16,7 +16,7 @@ import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.presentation.adapters.CoinAdapter
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
-import com.grebnev.cryptoprice.presentation.coinitem.CoinItemFragment
+import com.grebnev.cryptoprice.presentation.coinitem.pager.CoinItemFragment
 import javax.inject.Inject
 
 class CoinListFragment : Fragment() {

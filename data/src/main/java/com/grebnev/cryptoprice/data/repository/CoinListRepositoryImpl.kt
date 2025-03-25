@@ -6,7 +6,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.grebnev.core.ErrorHandler
 import com.grebnev.core.ErrorType
-import com.grebnev.core.ResultState
+import com.grebnev.core.ResultStatus
 import com.grebnev.core.mergeWith
 import com.grebnev.cryptoprice.data.database.CoinDao
 import com.grebnev.cryptoprice.data.mapper.CoinMapper
@@ -29,7 +29,7 @@ class CoinListRepositoryImpl
         private val coinDao: CoinDao,
         private val mapper: CoinMapper,
     ) : CoinListRepository {
-        private val coinListFlow: Flow<ResultState<List<Coin>, ErrorType>> =
+        private val coinListFlow: Flow<ResultStatus<List<Coin>, ErrorType>> =
             flow {
                 coinDao
                     .getCoinList()
@@ -38,15 +38,15 @@ class CoinListRepositoryImpl
                             mapper.mapDbModelToEntity(coinDbModel)
                         }
                     }.collect {
-                        emit(ResultState.Success(it) as ResultState<List<Coin>, ErrorType>)
+                        emit(ResultStatus.Success(it) as ResultStatus<List<Coin>, ErrorType>)
                     }
             }.catch { throwable ->
                 Timber.e(throwable)
-                emit(ResultState.Error(ErrorHandler.getErrorTypeByError(throwable)))
+                emit(ResultStatus.Error(ErrorHandler.getErrorTypeByError(throwable)))
             }
-        private val refreshedListFlow = MutableSharedFlow<ResultState<List<Coin>, ErrorType>>()
+        private val refreshedListFlow = MutableSharedFlow<ResultStatus<List<Coin>, ErrorType>>()
 
-        override val getCoinList: Flow<ResultState<List<Coin>, ErrorType>> =
+        override val getCoinList: Flow<ResultStatus<List<Coin>, ErrorType>> =
             coinListFlow
                 .mergeWith(refreshedListFlow)
 
@@ -69,7 +69,7 @@ class CoinListRepositoryImpl
                             Timber.e("Error in worker")
                             val outputError = workInfo.outputData.getString(RefreshDataWorker.ERROR_KEY)
                             val typeError = ErrorHandler.getErrorTypeByValue(outputError)
-                            refreshedListFlow.emit(ResultState.Error(typeError))
+                            refreshedListFlow.emit(ResultStatus.Error(typeError))
                             delay(RefreshDataWorker.REFRESH_TIMEOUT_AFTER_ERROR)
                             loadData()
                         }
