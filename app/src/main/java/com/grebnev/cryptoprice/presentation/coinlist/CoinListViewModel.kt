@@ -3,7 +3,7 @@ package com.grebnev.cryptoprice.presentation.coinlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grebnev.core.ErrorType
-import com.grebnev.core.ResultState
+import com.grebnev.core.ResultStatus
 import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.usecase.GetCoinListUseCase
 import com.grebnev.cryptoprice.domain.usecase.GetTimeLastUpdate
@@ -40,16 +40,16 @@ class CoinListViewModel
                 )
 
         private fun mapResultStateToScreenState(
-            coinListSate: ResultState<List<Coin>, ErrorType>,
+            coinListSate: ResultStatus<List<Coin>, ErrorType>,
         ): CoinListScreenState =
             when (coinListSate) {
-                is ResultState.Error ->
+                is ResultStatus.Error ->
                     CoinListScreenState.Error(coinListSate.error.type)
 
-                ResultState.Initial ->
+                ResultStatus.Initial ->
                     CoinListScreenState.Loading
 
-                is ResultState.Success -> {
+                is ResultStatus.Success -> {
                     CoinListScreenState.Success(
                         coinListSate.data,
                         timeLastUpdateState.value,

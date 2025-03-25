@@ -1,7 +1,7 @@
 package com.grebnev.cryptoprice.domain.repository
 
 import com.grebnev.core.ErrorType
-import com.grebnev.core.ResultState
+import com.grebnev.core.ResultStatus
 import com.grebnev.cryptoprice.domain.entity.Bar
 import kotlinx.coroutines.flow.Flow
 
@@ -9,5 +9,5 @@ interface BarRepository {
     fun getBarsForCoin(
         fromSymbol: String,
         timeFrame: String,
-    ): Flow<ResultState<List<Bar>, ErrorType>>
+    ): Flow<ResultStatus<List<Bar>, ErrorType>>
 }

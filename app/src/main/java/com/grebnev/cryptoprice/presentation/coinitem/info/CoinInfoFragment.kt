@@ -1,38 +1,34 @@
-package com.grebnev.cryptoprice.presentation.coinitem
+package com.grebnev.cryptoprice.presentation.coinitem.info
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.Modifier
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
-import com.grebnev.cryptoprice.databinding.FragmentCoinItemBinding
+import com.grebnev.cryptoprice.databinding.FragmentCoinInfoBinding
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
-import com.grebnev.cryptoprice.presentation.coinitem.bars.TerminalBarsState
-import com.grebnev.cryptoprice.presentation.coinitem.bars.TerminalScreen
-import com.grebnev.cryptoprice.presentation.coinitem.bars.TimeFrame
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
-class CoinItemFragment : Fragment() {
+class CoinInfoFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
     private val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[CoinItemViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[CoinInfoViewModel::class.java]
     }
 
     private val component by lazy {
         (requireActivity().application as BaseApplication).component
     }
 
-    private var _binding: FragmentCoinItemBinding? = null
-    private val binding: FragmentCoinItemBinding
-        get() = _binding ?: throw RuntimeException("FragmentCoinItemBinding is null")
+    private var _binding: FragmentCoinInfoBinding? = null
+    private val binding: FragmentCoinInfoBinding
+        get() = _binding ?: throw RuntimeException("FragmentCoinInfoBinding is null")
 
     override fun onAttach(context: Context) {
         component.inject(this)
@@ -44,7 +40,7 @@ class CoinItemFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentCoinItemBinding.inflate(inflater, container, false)
+        _binding = FragmentCoinInfoBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -55,20 +51,19 @@ class CoinItemFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
         displayCoinInfo(fromSymbol)
-        displayTerminalBars(fromSymbol = fromSymbol)
     }
 
     private fun displayCoinInfo(fromSymbol: String) {
-        viewModel.getCoinItem(fromSymbol)
+        viewModel.getCoinInfo(fromSymbol)
         viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
             when (screen) {
-                is CoinItemScreenState.Error -> {
+                is CoinInfoScreenState.Error -> {
                 }
-                CoinItemScreenState.Initial -> {
+                CoinInfoScreenState.Initial -> {
                 }
-                CoinItemScreenState.Loading -> {
+                CoinInfoScreenState.Loading -> {
                 }
-                is CoinItemScreenState.Success -> {
+                is CoinInfoScreenState.Content -> {
                     with(binding) {
                         tvFromSymbol.text = screen.coin.fromSymbol
                         tvToSymbol.text = screen.coin.toSymbol
@@ -84,32 +79,6 @@ class CoinItemFragment : Fragment() {
         }
     }
 
-    private fun displayTerminalBars(
-        timeFrame: TimeFrame = TimeFrame.DAILY,
-        fromSymbol: String,
-    ) {
-        viewModel.loadBarsForCoin(timeFrame, fromSymbol)
-        viewModel.barState.asLiveData().observe(viewLifecycleOwner) { terminalBarsState ->
-            if (terminalBarsState is TerminalBarsState.Content) {
-                val isVisibleCoinInfo = if (terminalBarsState.isFullScreen) View.GONE else View.VISIBLE
-                binding.clCoinInfo.visibility = isVisibleCoinInfo
-            }
-            binding.composeViewTerminalBars.setContent {
-                TerminalScreen(
-                    modifier = Modifier,
-                    terminalBarsState = terminalBarsState,
-                    onRetryClickListener = {
-                        viewModel.loadBarsForCoin(timeFrame, fromSymbol)
-                    },
-                    onTimeFrameSelected = { timeFrame ->
-                        viewModel.changeTimeFrameStatus(timeFrame, fromSymbol)
-                    },
-                    onChangedStatusFullScreenListener = { viewModel.changeFullScreenStatus() },
-                )
-            }
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -119,8 +88,8 @@ class CoinItemFragment : Fragment() {
         private const val EXTRA_FROM_SYMBOL = "from_symbol"
         private const val EMPTY_SYMBOL = ""
 
-        fun newInstance(fromSymbol: String): CoinItemFragment =
-            CoinItemFragment().apply {
+        fun newInstance(fromSymbol: String): CoinInfoFragment =
+            CoinInfoFragment().apply {
                 arguments =
                     Bundle().apply {
                         putString(EXTRA_FROM_SYMBOL, fromSymbol)

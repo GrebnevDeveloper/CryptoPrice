@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.presentation.coinitem.bars
+package com.grebnev.cryptoprice.presentation.coinitem.terminal.bars
 
 import com.grebnev.cryptoprice.domain.entity.Bar
 
