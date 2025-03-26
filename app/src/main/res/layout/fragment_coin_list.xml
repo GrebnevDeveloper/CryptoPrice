@@ -11,14 +11,12 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/border_view">
+        android:layout_height="wrap_content">
         <TextView
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textColor="@color/black"
             android:textSize="16sp"
             tools:text="@string/app_name" />
 
@@ -30,7 +28,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/last_update"
-            android:textColor="@color/black"
             android:textSize="12sp"
             tools:text="@string/last_update" />
 
@@ -38,7 +35,6 @@
                 android:id="@+id/tvTimeLastUpdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:text="@string/loading"
                 tools:text="12:54:12" />
@@ -49,8 +45,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/border_view">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_symbols"
@@ -59,7 +54,6 @@
             android:layout_weight="1.5"
             android:layout_marginStart="14dp"
             android:text="@string/coin"
-            android:textColor="@color/black"
             android:textSize="16sp"
             tools:text="Монета" />
 
@@ -70,7 +64,6 @@
             android:layout_weight="2"
             android:gravity="end"
             android:text="@string/price_list_title"
-            android:textColor="@color/black"
             android:textSize="15sp"
             tools:text="Цена" />
 
@@ -81,7 +74,6 @@
             android:layout_weight="1.5"
             android:gravity="end"
             android:text="@string/change_pct_24"
-            android:textColor="@color/black"
             android:textSize="15sp"
             tools:text="24ч" />
 
@@ -93,7 +85,6 @@
             android:layout_weight="2.5"
             android:layout_marginEnd="8dp"
             android:text="@string/mktcap"
-            android:textColor="@color/black"
             android:textSize="15sp"
             tools:text="Капитализация" />
 
@@ -111,7 +102,6 @@
         android:id="@+id/rv_coin_price_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/border_view"
         android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_coin_info" />
