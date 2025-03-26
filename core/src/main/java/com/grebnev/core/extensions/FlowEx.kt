@@ -1,4 +1,4 @@
-package com.grebnev.core
+package com.grebnev.core.extensions
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.merge

@@ -1,5 +1,6 @@
-package com.grebnev.core
+package com.grebnev.core.handlers
 
+import com.grebnev.core.wrappers.ErrorType
 import java.io.IOException
 import java.sql.SQLException
 

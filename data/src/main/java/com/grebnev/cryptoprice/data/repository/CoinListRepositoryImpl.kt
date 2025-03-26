@@ -4,10 +4,10 @@ import android.app.Application
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.grebnev.core.ErrorHandler
-import com.grebnev.core.ErrorType
-import com.grebnev.core.ResultStatus
-import com.grebnev.core.mergeWith
+import com.grebnev.core.extensions.mergeWith
+import com.grebnev.core.handlers.ErrorHandler
+import com.grebnev.core.wrappers.ErrorType
+import com.grebnev.core.wrappers.ResultStatus
 import com.grebnev.cryptoprice.data.database.CoinDao
 import com.grebnev.cryptoprice.data.mapper.CoinMapper
 import com.grebnev.cryptoprice.data.workers.RefreshDataWorker
