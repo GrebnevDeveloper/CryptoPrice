@@ -1,8 +1,8 @@
 package com.grebnev.cryptoprice.data.repository
 
-import com.grebnev.core.ErrorHandler
-import com.grebnev.core.ErrorType
-import com.grebnev.core.ResultStatus
+import com.grebnev.core.handlers.ErrorHandler
+import com.grebnev.core.wrappers.ErrorType
+import com.grebnev.core.wrappers.ResultStatus
 import com.grebnev.cryptoprice.data.mapper.BarMapper
 import com.grebnev.cryptoprice.data.network.ApiService
 import com.grebnev.cryptoprice.domain.entity.Bar

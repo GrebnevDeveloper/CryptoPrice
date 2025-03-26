@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import com.grebnev.core.extensions.formatWithRoundAndDelimiter
 import com.grebnev.cryptoprice.databinding.FragmentCoinInfoBinding
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
@@ -67,9 +68,9 @@ class CoinInfoFragment : Fragment() {
                     with(binding) {
                         tvFromSymbol.text = screen.coin.fromSymbol
                         tvToSymbol.text = screen.coin.toSymbol
-                        tvPrice.text = screen.coin.price.toString()
-                        tvMinPrice.text = screen.coin.lowDay.toString()
-                        tvMaxPrice.text = screen.coin.highDay.toString()
+                        tvPrice.text = screen.coin.price?.formatWithRoundAndDelimiter()
+                        tvMinPrice.text = screen.coin.lowDay?.formatWithRoundAndDelimiter()
+                        tvMaxPrice.text = screen.coin.highDay?.formatWithRoundAndDelimiter()
                         tvLastMarket.text = screen.coin.lastMarket
                         tvLastUpdate.text = screen.coin.lastUpdate
                         Picasso.get().load(screen.coin.imageUrl).into(binding.ivLogoCoinDetail)

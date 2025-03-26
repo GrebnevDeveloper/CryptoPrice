@@ -42,6 +42,7 @@ class CoinItemFragment : Fragment() {
         val tabLayout = binding.tabLayout
 
         viewPager.adapter = adapter
+        viewPager.isUserInputEnabled = false
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = adapter.getPageTitle(position)
         }.attach()

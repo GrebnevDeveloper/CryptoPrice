@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
@@ -74,7 +75,7 @@ fun TerminalScreen(
                 modifier =
                     modifier
                         .fillMaxSize()
-                        .background(Color.Black),
+                        .background(colorResource(R.color.md_theme_background)),
                 contentAlignment = Alignment.Center,
             ) {
                 CircularProgressIndicator()
@@ -103,7 +104,7 @@ fun ErrorScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(Color.Black),
+                .background(colorResource(R.color.md_theme_background)),
         contentAlignment = Alignment.Center,
     ) {
         Column(
@@ -112,7 +113,7 @@ fun ErrorScreen(
         ) {
             Text(
                 text = errorMessage,
-                color = Color.White,
+                color = colorResource(R.color.md_theme_onPrimary),
                 fontSize = 16.sp,
             )
 
@@ -122,7 +123,7 @@ fun ErrorScreen(
                 Icon(
                     imageVector = Icons.Default.Refresh,
                     contentDescription = "Retry",
-                    tint = Color.White,
+                    tint = colorResource(R.color.md_theme_onPrimary),
                 )
             }
         }
@@ -222,8 +223,18 @@ private fun TimeFrames(
                 label = { Text(stringResource(labelResId)) },
                 colors =
                     AssistChipDefaults.assistChipColors(
-                        containerColor = if (isSelected) Color.White else Color.Black,
-                        labelColor = if (isSelected) Color.Black else Color.White,
+                        containerColor =
+                            if (isSelected) {
+                                colorResource(R.color.md_theme_background)
+                            } else {
+                                colorResource(R.color.md_theme_onBackground)
+                            },
+                        labelColor =
+                            if (isSelected) {
+                                colorResource(R.color.md_theme_primary)
+                            } else {
+                                colorResource(R.color.md_theme_onPrimary)
+                            },
                     ),
             )
         }
@@ -251,7 +262,7 @@ private fun FullScreenIcon(
                 } else {
                     "Enter Fullscreen"
                 },
-            tint = Color.White,
+            tint = colorResource(R.color.md_theme_primary),
         )
     }
 }
@@ -295,12 +306,14 @@ private fun Chart(
     // Измеритель текста для отображения меток
     val textMeasurer = rememberTextMeasurer()
 
+    val color = colorResource(R.color.md_theme_primary)
+
     // Холст для отрисовки графика
     Canvas(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(Color.Black)
+                .background(colorResource(R.color.md_theme_background))
                 .clipToBounds()
                 .padding(
                     top = 32.dp,
@@ -334,10 +347,11 @@ private fun Chart(
                     timeFrame = timeFrame,
                     offsetX = offsetX,
                     textMeasurer = textMeasurer,
+                    color = color,
                 )
                 // Отрисовываем линию от минимума до максимума
                 drawLine(
-                    color = Color.White,
+                    color = color,
                     strokeWidth = 1.dp.toPx(),
                     start = Offset(offsetX, (size.height - (bar.low - min) * pxPerPoint).toFloat()),
                     end = Offset(offsetX, (size.height - (bar.high - min) * pxPerPoint).toFloat()),
@@ -368,6 +382,8 @@ private fun Prices(
     val min = currentTerminalState.min
     val pxPerPoint = currentTerminalState.pxPerPoint
 
+    val color = colorResource(R.color.md_theme_primary)
+
     // Холст для отрисовки цен
     Canvas(
         modifier =
@@ -376,7 +392,14 @@ private fun Prices(
                 .clipToBounds()
                 .padding(vertical = 32.dp),
     ) {
-        drawPrices(textMeasurer, max.toFloat(), min.toFloat(), pxPerPoint.toFloat(), lastPrice.toFloat())
+        drawPrices(
+            textMeasurer = textMeasurer,
+            max = max.toFloat(),
+            min = min.toFloat(),
+            pxPerPoint = pxPerPoint.toFloat(),
+            lastPrice = lastPrice.toFloat(),
+            color = color,
+        )
     }
 }
 
@@ -386,6 +409,7 @@ private fun DrawScope.drawTimeDelimiter(
     timeFrame: TimeFrame, // Выбранный временной интервал
     offsetX: Float, // Смещение по оси X
     textMeasurer: TextMeasurer, // Измеритель текста
+    color: Color, // Передаём цвет
 ) {
     // Разбираем время для бара на отделные составляющие
     val calendar = bar.calendar
@@ -417,7 +441,7 @@ private fun DrawScope.drawTimeDelimiter(
 
     // Рисуем пунктирную линию разделителя
     drawLine(
-        color = Color.White.copy(alpha = 0.5f),
+        color = color.copy(alpha = 0.5f),
         strokeWidth = 1.dp.toPx(),
         start = Offset(offsetX, 0f),
         end = Offset(offsetX, size.height),
@@ -448,7 +472,7 @@ private fun DrawScope.drawTimeDelimiter(
             text = text,
             style =
                 TextStyle(
-                    color = Color.White,
+                    color = color,
                     fontSize = 12.sp,
                 ),
         )
@@ -470,10 +494,12 @@ private fun DrawScope.drawPrices(
     min: Float, // Минимальная цена
     pxPerPoint: Float, // Пикселей на пункт
     lastPrice: Float, // Последняя цена закрытия
+    color: Color, // Цвет для отрисовки
 ) {
     // Рисуем линию и текст для максимальной цены
     val maxPriceOffsetY = 0f
     drawDashedLine(
+        color = color,
         start = Offset(0f, maxPriceOffsetY),
         end = Offset(size.width, maxPriceOffsetY),
     )
@@ -481,11 +507,13 @@ private fun DrawScope.drawPrices(
         textMeasurer = textMeasurer,
         price = max,
         offsetY = maxPriceOffsetY,
+        color = color,
     )
 
     // Рисуем линию и текст для последней цены
     val lastPriceOffsetY = size.height - ((lastPrice - min) * pxPerPoint)
     drawDashedLine(
+        color = color,
         start = Offset(0f, lastPriceOffsetY),
         end = Offset(size.width, lastPriceOffsetY),
     )
@@ -493,11 +521,13 @@ private fun DrawScope.drawPrices(
         textMeasurer = textMeasurer,
         price = lastPrice,
         offsetY = lastPriceOffsetY,
+        color = color,
     )
 
     // Рисуем линию и текст для минимальной цены
     val minPriceOffsetY = size.height
     drawDashedLine(
+        color = color,
         start = Offset(0f, minPriceOffsetY),
         end = Offset(size.width, minPriceOffsetY),
     )
@@ -505,6 +535,7 @@ private fun DrawScope.drawPrices(
         textMeasurer = textMeasurer,
         price = min,
         offsetY = minPriceOffsetY,
+        color = color,
     )
 }
 
@@ -512,13 +543,14 @@ private fun DrawScope.drawTextPrices(
     textMeasurer: TextMeasurer, // Измеритель текста
     price: Float, // Цена
     offsetY: Float, // Смещение по оси Y
+    color: Color, // Цвет для отрисовки
 ) {
     val textLayoutResult =
         textMeasurer.measure(
             text = price.toString(),
             style =
                 TextStyle(
-                    color = Color.White,
+                    color = color,
                     fontSize = 12.sp,
                 ),
         )
@@ -535,7 +567,7 @@ private fun DrawScope.drawTextPrices(
 }
 
 private fun DrawScope.drawDashedLine(
-    color: Color = Color.White, // Цвет линии
+    color: Color, // Цвет линии
     start: Offset, // Начальная точка
     end: Offset, // Конечная точка
     strokeWidth: Float = 1.dp.toPx(), // Толщина линии

@@ -6,9 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.grebnev.cryptoprice.R
 import com.grebnev.cryptoprice.databinding.FragmentCoinListBinding
@@ -59,12 +63,15 @@ class CoinListFragment : Fragment() {
                 is CoinListScreenState.Error -> {
                     Snackbar.make(binding.root, screen.message, Snackbar.LENGTH_LONG).show()
                 }
+
                 CoinListScreenState.Initial -> {
                 }
+
                 CoinListScreenState.Loading -> {
                     binding.rvCoinPriceList.visibility = View.GONE
                     binding.pbLoadingIndicator.visibility = View.VISIBLE
                 }
+
                 is CoinListScreenState.Success -> {
                     binding.tvTimeLastUpdate.text = screen.timeLastUpdate
                     val adapter = CoinAdapter(requireActivity())
@@ -79,6 +86,19 @@ class CoinListFragment : Fragment() {
                                 }
                             }
                         }
+                    val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+                    ContextCompat.getDrawable(requireContext(), R.drawable.divider)?.let { drawable ->
+                        divider.setDrawable(drawable)
+                    } ?: run {
+                        divider.setDrawable(
+                            ContextCompat
+                                .getColor(
+                                    requireContext(),
+                                    R.color.md_theme_secondary,
+                                ).toDrawable(),
+                        )
+                    }
+                    binding.rvCoinPriceList.addItemDecoration(divider)
                     binding.rvCoinPriceList.adapter = adapter
                     adapter.submitList(screen.coins)
                     binding.rvCoinPriceList.visibility = View.VISIBLE

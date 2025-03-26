@@ -2,9 +2,9 @@ package com.grebnev.cryptoprice.presentation.coinitem.terminal
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.grebnev.core.ErrorHandler
-import com.grebnev.core.ErrorType
-import com.grebnev.core.ResultStatus
+import com.grebnev.core.handlers.ErrorHandler
+import com.grebnev.core.wrappers.ErrorType
+import com.grebnev.core.wrappers.ResultStatus
 import com.grebnev.cryptoprice.domain.entity.Bar
 import com.grebnev.cryptoprice.domain.usecase.GetBarsForCoinUseCase
 import com.grebnev.cryptoprice.presentation.coinitem.terminal.bars.TerminalBarsState
