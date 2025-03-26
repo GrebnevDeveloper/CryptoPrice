@@ -2,7 +2,7 @@ package com.grebnev.cryptoprice.data.repository
 
 import com.grebnev.core.ErrorHandler
 import com.grebnev.core.ErrorType
-import com.grebnev.core.ResultState
+import com.grebnev.core.ResultStatus
 import com.grebnev.cryptoprice.data.database.CoinDao
 import com.grebnev.cryptoprice.data.mapper.CoinMapper
 import com.grebnev.cryptoprice.domain.entity.Coin
@@ -19,16 +19,16 @@ class CoinRepositoryImpl
         private val coinDao: CoinDao,
         private val mapper: CoinMapper,
     ) : CoinRepository {
-        override fun getCoinItem(fromSymbol: String): Flow<ResultState<Coin, ErrorType>> =
+        override fun getCoinInfo(fromSymbol: String): Flow<ResultStatus<Coin, ErrorType>> =
             flow {
                 coinDao
                     .getCoinFromSymbol(fromSymbol)
                     .map { coinDbModel ->
                         mapper.mapDbModelToEntity(coinDbModel)
                     }.collect {
-                        emit(ResultState.Success(it) as ResultState<Coin, ErrorType>)
+                        emit(ResultStatus.Success(it) as ResultStatus<Coin, ErrorType>)
                     }
             }.catch { throwable ->
-                emit(ResultState.Error(ErrorHandler.getErrorTypeByError(throwable)))
+                emit(ResultStatus.Error(ErrorHandler.getErrorTypeByError(throwable)))
             }
     }

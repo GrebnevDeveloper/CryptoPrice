@@ -2,7 +2,7 @@ package com.grebnev.cryptoprice.data.repository
 
 import com.grebnev.core.ErrorHandler
 import com.grebnev.core.ErrorType
-import com.grebnev.core.ResultState
+import com.grebnev.core.ResultStatus
 import com.grebnev.cryptoprice.data.mapper.BarMapper
 import com.grebnev.cryptoprice.data.network.ApiService
 import com.grebnev.cryptoprice.domain.entity.Bar
@@ -22,7 +22,7 @@ class BarRepositoryImpl
         override fun getBarsForCoin(
             fromSymbol: String,
             timeFrame: String,
-        ): Flow<ResultState<List<Bar>, ErrorType>> =
+        ): Flow<ResultStatus<List<Bar>, ErrorType>> =
             flow {
                 val response =
                     apiService.getBarsForCoin(
@@ -30,10 +30,10 @@ class BarRepositoryImpl
                         fSyms = fromSymbol,
                     )
                 val bars = mapper.mapBarContainerDtoToBarEntity(response)
-                emit(ResultState.Success(bars) as ResultState<List<Bar>, ErrorType>)
+                emit(ResultStatus.Success(bars) as ResultStatus<List<Bar>, ErrorType>)
             }.catch { throwable ->
                 Timber.e(throwable)
                 val typeError = ErrorHandler.getErrorTypeByError(throwable)
-                emit(ResultState.Error(typeError))
+                emit(ResultStatus.Error(typeError))
             }
     }
