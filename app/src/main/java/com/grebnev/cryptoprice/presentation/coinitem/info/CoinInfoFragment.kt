@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import com.grebnev.core.extensions.formatWithRoundAndDelimiter
+import com.grebnev.core.extensions.formatWithRoundAndSuffix
+import com.grebnev.cryptoprice.R
 import com.grebnev.cryptoprice.databinding.FragmentCoinInfoBinding
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
@@ -59,20 +62,71 @@ class CoinInfoFragment : Fragment() {
             when (screen) {
                 is CoinInfoScreenState.Error -> {
                 }
+
                 CoinInfoScreenState.Initial -> {
                 }
+
                 CoinInfoScreenState.Loading -> {
                 }
+
                 is CoinInfoScreenState.Content -> {
+                    val changePctTemplate =
+                        requireContext().resources.getString(R.string.change_pct_24_hour_template)
+                    val costTemplate =
+                        requireContext().resources.getString(R.string.cost_template)
                     with(binding) {
-                        tvFromSymbol.text = screen.coin.fromSymbol
-                        tvToSymbol.text = screen.coin.toSymbol
-                        tvPrice.text = screen.coin.price.toString()
-                        tvMinPrice.text = screen.coin.lowDay.toString()
-                        tvMaxPrice.text = screen.coin.highDay.toString()
-                        tvLastMarket.text = screen.coin.lastMarket
-                        tvLastUpdate.text = screen.coin.lastUpdate
-                        Picasso.get().load(screen.coin.imageUrl).into(binding.ivLogoCoinDetail)
+                        with(screen) {
+                            tvFromSymbol.text = coin.fromSymbol
+                            tvToSymbol.text = coin.toSymbol
+                            ciPrice.setValue(
+                                String.format(
+                                    costTemplate,
+                                    coin.price?.formatWithRoundAndDelimiter(),
+                                ),
+                            )
+                            ciOpenPrice.setValue(
+                                String.format(
+                                    costTemplate,
+                                    coin.openDay?.formatWithRoundAndDelimiter(),
+                                ),
+                            )
+                            ciMinPrice.setValue(
+                                String.format(
+                                    costTemplate,
+                                    coin.lowDay?.formatWithRoundAndDelimiter(),
+                                ),
+                            )
+                            ciMaxPrice.setValue(
+                                String.format(
+                                    costTemplate,
+                                    coin.highDay?.formatWithRoundAndDelimiter(),
+                                ),
+                            )
+                            ciChangePctDay.setValue(
+                                String.format(
+                                    changePctTemplate,
+                                    coin.changePctDay,
+                                ),
+                            )
+                            ciVolumeDay.setValue(
+                                String.format(
+                                    costTemplate,
+                                    coin.volumeDay?.formatWithRoundAndDelimiter()
+                                        ?: getString(R.string.no_data),
+                                ),
+                            )
+                            ciMktCap.setValue(
+                                String.format(
+                                    costTemplate,
+                                    coin.mktCap?.formatWithRoundAndSuffix()
+                                        ?: getString(R.string.no_data),
+                                ),
+                            )
+                            ciLastMarket.setValue(coin.lastMarket ?: getString(R.string.no_data))
+                            ciLastUpdate.setValue(coin.lastUpdate)
+                            ciLastUpdate.showDivider(false)
+                            Picasso.get().load(coin.imageUrl).into(ivLogoCoinDetail)
+                        }
                     }
                 }
             }

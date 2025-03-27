@@ -9,55 +9,54 @@
         android:layout_height="wrap_content"
         tools:context=".presentation.coinitem.info.CoinInfoFragment">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_logo_coin_detail"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="@dimen/coinInfoImageSize"
+            android:layout_height="@dimen/coinInfoImageSize"
             android:layout_margin="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextAppearance.Material3.TitleLarge"
             android:id="@+id/tv_from_symbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/purple_200"
-            android:textSize="24sp"
+            android:textColor="@color/md_theme_primary"
             app:layout_constraintBottom_toBottomOf="@id/tv_slash"
             app:layout_constraintEnd_toStartOf="@id/tv_slash"
             app:layout_constraintTop_toTopOf="@id/tv_slash"
             tools:text="BTC" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextAppearance.Material3.TitleLarge"
             android:id="@+id/tv_slash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:text="@string/slash"
-            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_logo_coin_detail" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextAppearance.Material3.TitleLarge"
             android:id="@+id/tv_to_symbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/teal_200"
-            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_slash"
             app:layout_constraintStart_toEndOf="@id/tv_slash"
             app:layout_constraintTop_toTopOf="@id/tv_slash"
             tools:text="USD" />
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_coin_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            app:cardUseCompatPadding="true"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceCardView"
             app:layout_constraintTop_toBottomOf="@id/tv_slash">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -66,168 +65,82 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
 
-                <TextView
-                    android:id="@+id/tv_price_label"
-                    android:layout_width="wrap_content"
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_price"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:text="@string/price"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@id/tv_price_label"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="7850.4" />
+                    app:labelText="@string/price"
+                    tools:valueText="$ 7850.4"/>
 
-                <TextView
-                    android:id="@+id/tv_min_price_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:text="@string/min_price"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_price_label" />
-
-                <TextView
-                    android:id="@+id/tv_min_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:textColor="@color/min_price"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@id/tv_min_price_label"
-                    app:layout_constraintTop_toBottomOf="@id/tv_price_label"
-                    tools:text="7450.4" />
-
-                <TextView
-                    android:id="@+id/tv_max_price_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:text="@string/max_price"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_min_price_label" />
-
-                <TextView
-                    android:id="@+id/tv_max_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:textColor="@color/max_price"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@id/tv_max_price_label"
-                    app:layout_constraintTop_toBottomOf="@id/tv_min_price_label"
-                    tools:text="7950.4" />
-
-                <TextView
-                    android:id="@+id/tv_last_market_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:text="@string/last_market"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_max_price_label" />
-
-                <TextView
-                    android:id="@+id/tv_last_market"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@id/tv_last_market_label"
-                    app:layout_constraintTop_toBottomOf="@id/tv_max_price_label"
-                    tools:text="Bitfinex" />
-
-                <TextView
-                    android:id="@+id/tv_last_update_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:text="@string/last_update"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_last_market_label" />
-
-                <TextView
-                    android:id="@+id/tv_last_update"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@id/tv_last_update_label"
-                    app:layout_constraintTop_toBottomOf="@id/tv_last_market_label"
-                    tools:text="22.04.2022" />
-
-                <View
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_open_price"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/border_view"
-                    app:layout_constraintTop_toBottomOf="@id/tv_price" />
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_price"
+                    app:labelText="@string/open_price"
+                    tools:valueText="$ 7850.4"/>
 
-                <View
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_min_price"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/border_view"
-                    app:layout_constraintTop_toBottomOf="@id/tv_min_price" />
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_open_price"
+                    app:labelText="@string/min_price"
+                    app:valueColor="@color/min_price"
+                    tools:valueText="$ 7850.4"/>
 
-                <View
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_max_price"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/border_view"
-                    app:layout_constraintTop_toBottomOf="@id/tv_max_price" />
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_min_price"
+                    app:labelText="@string/max_price"
+                    app:valueColor="@color/max_price"
+                    tools:valueText="$ 7850.4"/>
 
-                <View
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_change_pct_day"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/border_view"
-                    app:layout_constraintTop_toBottomOf="@id/tv_last_market" />
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_max_price"
+                    app:labelText="@string/change_day"
+                    tools:valueText="10.1%"/>
 
-                <View
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_volume_day"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/border_view"
-                    app:layout_constraintTop_toBottomOf="@id/tv_last_update" />
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_change_pct_day"
+                    app:labelText="@string/volume_day"
+                    tools:valueText="$ 7850.4"/>
 
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_mkt_cap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_volume_day"
+                    app:labelText="@string/mktcap"
+                    tools:valueText="$ 7850.4"/>
 
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_last_market"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_mkt_cap"
+                    app:labelText="@string/last_market"
+                    tools:valueText="CCCAGG"/>
+
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_last_update"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_last_market"
+                    app:labelText="@string/last_update"
+                    tools:valueText="12:01:01"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

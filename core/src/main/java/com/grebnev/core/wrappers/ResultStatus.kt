@@ -1,4 +1,4 @@
-package com.grebnev.core
+package com.grebnev.core.wrappers
 
 sealed class ResultStatus<out T, out E> {
     data class Success<out T>(

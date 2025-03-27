@@ -9,7 +9,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.grebnev.core.ErrorHandler
+import com.grebnev.core.handlers.ErrorHandler
 import com.grebnev.cryptoprice.data.database.CoinDao
 import com.grebnev.cryptoprice.data.mapper.CoinMapper
 import com.grebnev.cryptoprice.data.network.ApiService
@@ -58,7 +58,7 @@ class RefreshDataWorker(
     companion object {
         const val REFRESH_WORKER_NAME = "refresh_data_worker"
         const val ERROR_KEY = "error_key"
-        const val REFRESH_TIMEOUT = 60L
+        const val REFRESH_TIMEOUT = 10L
         const val REFRESH_TIMEOUT_AFTER_ERROR = 5000L
 
         fun makeRequest(): OneTimeWorkRequest = OneTimeWorkRequestBuilder<RefreshDataWorker>().build()

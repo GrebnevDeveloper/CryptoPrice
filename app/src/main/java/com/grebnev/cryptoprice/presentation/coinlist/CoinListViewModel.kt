@@ -2,8 +2,8 @@ package com.grebnev.cryptoprice.presentation.coinlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.grebnev.core.ErrorType
-import com.grebnev.core.ResultStatus
+import com.grebnev.core.wrappers.ErrorType
+import com.grebnev.core.wrappers.ResultStatus
 import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.usecase.GetCoinListUseCase
 import com.grebnev.cryptoprice.domain.usecase.GetTimeLastUpdate

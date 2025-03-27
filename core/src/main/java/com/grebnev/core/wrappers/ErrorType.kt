@@ -1,4 +1,4 @@
-package com.grebnev.core
+package com.grebnev.core.wrappers
 
 enum class ErrorType(
     val type: String,
