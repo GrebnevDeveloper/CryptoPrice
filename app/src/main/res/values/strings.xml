@@ -1,16 +1,13 @@
 <resources>
     <string name="app_name">CryptoPrice</string>
-    <string name="symbols_template">%s / %s</string>
-    <string name="last_update_template">Время последнего обновления: %s</string>
     <string name="slash">/</string>
-    <string name="price">Цена:</string>
+    <string name="price">Текущая цена:</string>
     <string name="min_price">Минимум за день:</string>
     <string name="max_price">Максимум за день:</string>
     <string name="last_market">Последняя сделка:</string>
     <string name="last_update">Обновлено:</string>
     <string name="change_pct_24_hour_template">%.2f%%</string>
-    <string name="price_template">$ %s</string>
-    <string name="mktcap_template">$ %s</string>
+    <string name="cost_template">$ %s</string>
     <string name="price_list_title">Цена</string>
     <string name="coin">Монета</string>
     <string name="change_pct_24">24ч.</string>
@@ -22,4 +19,8 @@
     <string name="page_info">Info</string>
     <string name="page_terminal">Terminal</string>
     <string name="page_news">News</string>
+    <string name="open_price">Цена открытия:</string>
+    <string name="volume_day">Объём за день:</string>
+    <string name="change_day">Изменение за день:</string>
+    <string name="no_data">Нет данных</string>
 </resources>

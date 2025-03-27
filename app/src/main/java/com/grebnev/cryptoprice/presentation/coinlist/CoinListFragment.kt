@@ -17,10 +17,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.grebnev.cryptoprice.R
 import com.grebnev.cryptoprice.databinding.FragmentCoinListBinding
 import com.grebnev.cryptoprice.domain.entity.Coin
-import com.grebnev.cryptoprice.presentation.adapters.CoinAdapter
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
 import com.grebnev.cryptoprice.presentation.coinitem.pager.CoinItemFragment
+import com.grebnev.cryptoprice.presentation.coinlist.adapters.CoinAdapter
 import javax.inject.Inject
 
 class CoinListFragment : Fragment() {
