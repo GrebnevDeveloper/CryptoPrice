@@ -1,11 +1,10 @@
-package com.grebnev.cryptoprice.presentation.adapters
+package com.grebnev.cryptoprice.presentation.coinlist.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
-import com.google.android.material.color.MaterialColors.getColor
 import com.grebnev.core.extensions.formatWithRoundAndDelimiter
 import com.grebnev.core.extensions.formatWithRoundAndSuffix
 import com.grebnev.cryptoprice.R
@@ -33,22 +32,16 @@ class CoinAdapter(
         position: Int,
     ) {
         val coin = getItem(position)
-        val symbolsTemplate =
-            context.resources.getString(R.string.symbols_template)
-        val lastUpdateTemplate =
-            context.resources.getString(R.string.last_update_template)
         val changePct24Template =
             context.resources.getString(R.string.change_pct_24_hour_template)
-        val priceTemplate =
-            context.resources.getString(R.string.price_template)
-        val mktCapTemplate =
-            context.resources.getString(R.string.mktcap_template)
+        val costTemplate =
+            context.resources.getString(R.string.cost_template)
         with(holder.binding) {
             tvSymbols.text = coin.fromSymbol
             tvPrice.text =
-                String.format(priceTemplate, coin.price?.formatWithRoundAndDelimiter())
+                String.format(costTemplate, coin.price?.formatWithRoundAndDelimiter())
             Picasso.get().load(coin.imageUrl).into(ivLogoCoin)
-            tvMktCap.text = String.format(mktCapTemplate, coin.mktCap?.formatWithRoundAndSuffix())
+            tvMktCap.text = String.format(costTemplate, coin.mktCap?.formatWithRoundAndSuffix())
             tvChangePct24.text = String.format(changePct24Template, coin.changePct24Hour)
             tvChangePct24.setTextColor(
                 ContextCompat.getColor(context, getColorForPct24Hour(coin.changePct24Hour)),

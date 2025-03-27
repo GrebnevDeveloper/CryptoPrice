@@ -11,4 +11,7 @@ data class Coin(
     val imageUrl: String,
     val mktCap: Double?,
     val changePct24Hour: Double?,
+    val changePctDay: Double?,
+    val openDay: Double?,
+    val volumeDay: Double?,
 )

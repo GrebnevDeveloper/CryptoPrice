@@ -29,6 +29,9 @@ class CoinMapper
                 imageUrl = BASE_IMAGE_URL + coinDto.imageUrl,
                 mktCap = coinDto.mktCap,
                 changePct24Hour = coinDto.changePct24Hour,
+                changePctDay = coinDto.changePctDay,
+                openDay = coinDto.openDay,
+                volumeDay = coinDto.volumeDayTo,
             )
 
         fun mapJsonContainerDtoToCoinDtoList(jsonContainer: CoinJsonContainerDto): List<CoinDto> {
@@ -69,6 +72,9 @@ class CoinMapper
                 imageUrl = coinDbModel.imageUrl,
                 mktCap = coinDbModel.mktCap,
                 changePct24Hour = coinDbModel.changePct24Hour,
+                changePctDay = coinDbModel.changePctDay,
+                openDay = coinDbModel.openDay,
+                volumeDay = coinDbModel.volumeDay,
             )
 
         fun mapTimeLastUpdateDbModelToEntity(timestamp: Long?): String = convertTimestampToTime(timestamp)
