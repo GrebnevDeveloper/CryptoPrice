@@ -7,10 +7,7 @@ import kotlin.math.abs
 
 fun Double.formatWithRoundAndDelimiter(decimalPlaces: Int = 2): String {
     val symbols =
-        DecimalFormatSymbols(Locale.getDefault()).apply {
-            groupingSeparator = ','
-            decimalSeparator = '.'
-        }
+        DecimalFormatSymbols(Locale.getDefault())
 
     val pattern =
         buildString {
@@ -38,10 +35,7 @@ fun Double.formatWithRoundAndSuffix(): String {
     val formattedNumber = this / divisor
 
     val symbols =
-        DecimalFormatSymbols(Locale.getDefault()).apply {
-            groupingSeparator = ','
-            decimalSeparator = '.'
-        }
+        DecimalFormatSymbols()
 
     val pattern =
         when {
