@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.presentation.coinlist.adapters
+package com.grebnev.cryptoprice.presentation.coinlist.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.grebnev.cryptoprice.databinding.ItemCoinInfoBinding

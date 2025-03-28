@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import com.grebnev.cryptoprice.databinding.FragmentCoinNewsBinding
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
+import com.grebnev.cryptoprice.presentation.coinitem.news.adapter.NewsAdapter
 import javax.inject.Inject
 
 class CoinNewsFragment : Fragment() {
@@ -47,6 +49,27 @@ class CoinNewsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        val category = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
+        viewModel.getNewsForCoin(category)
+        viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
+            when (screen) {
+                is CoinNewsScreenState.Content -> {
+                    val adapter = NewsAdapter()
+                    binding.rvCoinNewsList.adapter = adapter
+                    adapter.submitList(screen.news)
+                    binding.rvCoinNewsList.visibility = View.VISIBLE
+                    binding.pbLoadingIndicator.visibility = View.GONE
+                }
+                is CoinNewsScreenState.Error -> {
+                }
+                CoinNewsScreenState.Initial -> {
+                }
+                CoinNewsScreenState.Loading -> {
+                    binding.rvCoinNewsList.visibility = View.GONE
+                    binding.pbLoadingIndicator.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
