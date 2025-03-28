@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.presentation.coinlist.adapters
+package com.grebnev.cryptoprice.presentation.coinlist.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.grebnev.cryptoprice.domain.entity.Coin

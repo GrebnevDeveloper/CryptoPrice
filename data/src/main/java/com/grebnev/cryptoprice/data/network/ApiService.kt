@@ -3,6 +3,7 @@ package com.grebnev.cryptoprice.data.network
 import com.grebnev.cryptoprice.data.network.model.bars.BarContainerDto
 import com.grebnev.cryptoprice.data.network.model.coin.CoinJsonContainerDto
 import com.grebnev.cryptoprice.data.network.model.coin.CoinNameListDto
+import com.grebnev.cryptoprice.data.network.model.news.NewsResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -31,6 +32,13 @@ interface ApiService {
         @Query(QUERY_PARAM_TO_SYMBOL) tSym: String = CURRENCY,
     ): BarContainerDto
 
+    @GET("/data/v2/news/")
+    suspend fun getNewsForCoin(
+        @Query(QUERY_PARAM_API_KEY) apiKey: String = "",
+        @Query(QUERY_PARAM_LANG) lang: String = "EN",
+        @Query(QUERY_PARAM_CATEGORIES) category: String?,
+    ): NewsResponseDto
+
     companion object {
         private const val QUERY_PARAM_API_KEY = "api_key"
         private const val QUERY_PARAM_LIMIT = "limit"
@@ -39,6 +47,8 @@ interface ApiService {
         private const val QUERY_PARAM_TO_SYMBOLS = "tsyms"
         private const val QUERY_PARAM_FROM_SYMBOLS = "fsyms"
         private const val PATH_PARAM_TIME_FRAME = "timeFrame"
+        private const val QUERY_PARAM_CATEGORIES = "categories"
+        private const val QUERY_PARAM_LANG = "lang"
 
         private const val CURRENCY = "USD"
     }
