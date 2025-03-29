@@ -37,3 +37,5 @@ naming:
 style:
   SerialVersionUIDInSerializableClass:
     active: false
+  NewLineAtEndOfFile:
+    active: false
