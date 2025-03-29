@@ -19,7 +19,6 @@ class NewsMapper
                         imageUrl = it.imageUrl,
                         sourceUrl = it.sourceUrl,
                         title = it.title,
-                        body = it.body,
                     )
                 listNews.add(news)
             }
