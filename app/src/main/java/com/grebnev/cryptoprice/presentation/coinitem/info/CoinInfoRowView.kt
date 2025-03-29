@@ -4,11 +4,10 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.google.android.material.textview.MaterialTextView
 import com.grebnev.cryptoprice.R
+import com.grebnev.cryptoprice.databinding.ViewCoinInfoRowBinding
 
 class CoinInfoRowView
     @JvmOverloads
@@ -17,33 +16,32 @@ class CoinInfoRowView
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0,
     ) : ConstraintLayout(context, attrs, defStyleAttr) {
-        private val labelView: MaterialTextView
-        private val valueView: MaterialTextView
-        private val divider: View
+        private var _binding: ViewCoinInfoRowBinding? = null
+        private val binding: ViewCoinInfoRowBinding
+            get() = _binding ?: throw RuntimeException("ViewCoinInfoRowBinding is null")
 
         init {
-            LayoutInflater.from(context).inflate(R.layout.view_coin_info_row, this, true)
-
-            labelView = findViewById(R.id.label)
-            valueView = findViewById(R.id.value)
-            divider = findViewById(R.id.divider)
+            _binding = ViewCoinInfoRowBinding.inflate(LayoutInflater.from(context), this)
 
             context.obtainStyledAttributes(attrs, R.styleable.CoinInfoRowView).apply {
                 try {
-                    labelView.text = getString(R.styleable.CoinInfoRowView_labelText)
-                    valueView.text = getString(R.styleable.CoinInfoRowView_valueText)
+                    with(binding) {
+                        label.text = getString(R.styleable.CoinInfoRowView_labelText)
+                        value.text = getString(R.styleable.CoinInfoRowView_valueText)
 
-                    @ColorInt val color = getColor(R.styleable.CoinInfoRowView_valueColor, Color.TRANSPARENT)
-                    if (color != Color.TRANSPARENT) {
-                        valueView.setTextColor(color)
-                    }
-
-                    divider.visibility =
-                        if (getBoolean(R.styleable.CoinInfoRowView_showDivider, true)) {
-                            VISIBLE
-                        } else {
-                            GONE
+                        @ColorInt val color =
+                            getColor(R.styleable.CoinInfoRowView_valueColor, Color.TRANSPARENT)
+                        if (color != Color.TRANSPARENT) {
+                            value.setTextColor(color)
                         }
+
+                        divider.visibility =
+                            if (getBoolean(R.styleable.CoinInfoRowView_showDivider, true)) {
+                                VISIBLE
+                            } else {
+                                GONE
+                            }
+                    }
                 } finally {
                     recycle()
                 }
@@ -51,20 +49,20 @@ class CoinInfoRowView
         }
 
         fun setLabel(text: String) {
-            labelView.text = text
+            binding.label.text = text
         }
 
         fun setValue(text: String) {
-            valueView.text = text
+            binding.value.text = text
         }
 
         fun setValueColor(
             @ColorInt color: Int,
         ) {
-            valueView.setTextColor(color)
+            binding.value.setTextColor(color)
         }
 
         fun showDivider(show: Boolean) {
-            divider.visibility = if (show) VISIBLE else GONE
+            binding.divider.visibility = if (show) VISIBLE else GONE
         }
     }
