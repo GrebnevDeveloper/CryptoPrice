@@ -1,17 +1,13 @@
 package com.grebnev.cryptoprice.data.mapper
 
 import com.google.gson.Gson
+import com.grebnev.core.extensions.convertTimestampToTimeByPattern
 import com.grebnev.cryptoprice.data.database.CoinDbModel
 import com.grebnev.cryptoprice.data.network.ApiFactory.BASE_IMAGE_URL
 import com.grebnev.cryptoprice.data.network.model.coin.CoinDto
 import com.grebnev.cryptoprice.data.network.model.coin.CoinJsonContainerDto
 import com.grebnev.cryptoprice.data.network.model.coin.CoinNameListDto
 import com.grebnev.cryptoprice.domain.entity.Coin
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 import javax.inject.Inject
 
 class CoinMapper
@@ -65,7 +61,7 @@ class CoinMapper
                 fromSymbol = coinDbModel.fromSymbol,
                 toSymbol = coinDbModel.toSymbol,
                 price = coinDbModel.price,
-                lastUpdate = convertTimestampToTime(coinDbModel.lastUpdate),
+                lastUpdate = coinDbModel.lastUpdate.convertTimestampToTimeByPattern("HH:mm:ss"),
                 highDay = coinDbModel.highDay,
                 lowDay = coinDbModel.lowDay,
                 lastMarket = coinDbModel.lastMarket,
@@ -76,16 +72,4 @@ class CoinMapper
                 openDay = coinDbModel.openDay,
                 volumeDay = coinDbModel.volumeDay,
             )
-
-        fun mapTimeLastUpdateDbModelToEntity(timestamp: Long?): String = convertTimestampToTime(timestamp)
-
-        private fun convertTimestampToTime(timestamp: Long?): String {
-            if (timestamp == null) return ""
-            val stamp = Timestamp(timestamp * 1000)
-            val date = Date(stamp.time)
-            val pattern = "HH:mm:ss"
-            val sdf = SimpleDateFormat(pattern, Locale.getDefault())
-            sdf.timeZone = TimeZone.getDefault()
-            return sdf.format(date)
-        }
     }

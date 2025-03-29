@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.presentation.coinlist.adapters
+package com.grebnev.cryptoprice.presentation.coinlist.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
