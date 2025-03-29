@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.grebnev.core.extensions.convertTimestampToTimeByPattern
 import com.grebnev.core.extensions.mergeWith
 import com.grebnev.core.handlers.ErrorHandler
 import com.grebnev.core.wrappers.ErrorType
@@ -79,6 +80,6 @@ class CoinListRepositoryImpl
 
         override fun getTimeLastUpdate(): Flow<String> =
             coinDao.getTimeLastUpdate().map { timeLastUpdate ->
-                mapper.mapTimeLastUpdateDbModelToEntity(timeLastUpdate)
+                timeLastUpdate.convertTimestampToTimeByPattern("HH:mm:ss")
             }
     }
