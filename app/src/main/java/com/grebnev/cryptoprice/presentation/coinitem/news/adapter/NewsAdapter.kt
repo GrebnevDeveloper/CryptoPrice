@@ -1,10 +1,12 @@
 package com.grebnev.cryptoprice.presentation.coinitem.news.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.grebnev.cryptoprice.databinding.ItemCoinNewsBinding
 import com.grebnev.cryptoprice.domain.entity.News
+import com.grebnev.cryptoprice.presentation.base.WebViewActivity
 import com.squareup.picasso.Picasso
 
 class NewsAdapter : ListAdapter<News, NewsViewHolder>(NewsDiffCallback) {
@@ -25,11 +27,16 @@ class NewsAdapter : ListAdapter<News, NewsViewHolder>(NewsDiffCallback) {
         val news = getItem(position)
         with(holder.binding) {
             tvTitle.text = news.title
-            tvTitle.setOnClickListener {
-            }
             Picasso.get().load(news.imageUrl).into(ivNewsImage)
-            tvBody.text = news.body
             tvPublishedOn.text = news.publishedOn
+            tvTitle.setOnClickListener {
+                val context = holder.itemView.context
+                val intent =
+                    Intent(context, WebViewActivity::class.java).apply {
+                        putExtra(WebViewActivity.URL_KEY, news.sourceUrl)
+                    }
+                context.startActivity(intent)
+            }
         }
     }
 }

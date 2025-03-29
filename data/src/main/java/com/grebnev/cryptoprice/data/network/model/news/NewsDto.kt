@@ -8,5 +8,4 @@ data class NewsDto(
     @SerializedName("imageurl") val imageUrl: String,
     @SerializedName("url") val sourceUrl: String,
     @SerializedName("title") val title: String,
-    @SerializedName("body") val body: String,
 )
