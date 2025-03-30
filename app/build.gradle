@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.android.appcompat)
     implementation(libs.android.material)
     implementation(libs.constraint.layout)
+    implementation(libs.androidx.splash)
 
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
