@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.grebnev.cryptoprice.R
 import com.grebnev.cryptoprice.databinding.FragmentCoinListBinding
 import com.grebnev.cryptoprice.domain.entity.Coin
@@ -61,7 +60,10 @@ class CoinListFragment : Fragment() {
         viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
             when (screen) {
                 is CoinListScreenState.Error -> {
-                    Snackbar.make(binding.root, screen.message, Snackbar.LENGTH_LONG).show()
+                    binding.errorScreen.setErrorMessage(screen.message)
+                    binding.rvCoinPriceList.visibility = View.GONE
+                    binding.pbLoadingIndicator.visibility = View.GONE
+                    binding.errorScreen.visibility = View.VISIBLE
                 }
 
                 CoinListScreenState.Initial -> {
@@ -70,6 +72,7 @@ class CoinListFragment : Fragment() {
                 CoinListScreenState.Loading -> {
                     binding.rvCoinPriceList.visibility = View.GONE
                     binding.pbLoadingIndicator.visibility = View.VISIBLE
+                    binding.errorScreen.visibility = View.GONE
                 }
 
                 is CoinListScreenState.Success -> {
@@ -103,6 +106,7 @@ class CoinListFragment : Fragment() {
                     adapter.submitList(screen.coins)
                     binding.rvCoinPriceList.visibility = View.VISIBLE
                     binding.pbLoadingIndicator.visibility = View.GONE
+                    binding.errorScreen.visibility = View.GONE
                 }
             }
         }

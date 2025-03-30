@@ -23,4 +23,5 @@
     <string name="volume_day">Объём за день:</string>
     <string name="change_day">Изменение за день:</string>
     <string name="no_data">Нет данных</string>
+    <string name="retry">Повторить попытку</string>
 </resources>
