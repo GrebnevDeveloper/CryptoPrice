@@ -1,6 +1,7 @@
 package com.grebnev.cryptoprice.di
 
 import android.app.Application
+import com.grebnev.cryptoprice.di.module.AppModule
 import com.grebnev.cryptoprice.di.module.DataModule
 import com.grebnev.cryptoprice.di.module.DomainModule
 import com.grebnev.cryptoprice.di.module.ViewModelModule
@@ -16,6 +17,7 @@ import dagger.Component
 @ApplicationScope
 @Component(
     modules = [
+        AppModule::class,
         DataModule::class,
         DomainModule::class,
         ViewModelModule::class,

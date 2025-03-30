@@ -7,6 +7,7 @@ import com.grebnev.core.wrappers.ErrorType
 import com.grebnev.core.wrappers.ResultStatus
 import com.grebnev.cryptoprice.domain.entity.Bar
 import com.grebnev.cryptoprice.domain.usecase.GetBarsForCoinUseCase
+import com.grebnev.cryptoprice.presentation.base.ErrorMessageProvider
 import com.grebnev.cryptoprice.presentation.coinitem.terminal.bars.TimeFrame
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,7 @@ class TerminalBarsViewModel
     @Inject
     constructor(
         private val getBarsForCoinUseCase: GetBarsForCoinUseCase,
+        private val errorMessageProvider: ErrorMessageProvider,
     ) : ViewModel() {
         private val coroutineExceptionHandler =
             CoroutineExceptionHandler { _, throwable ->
@@ -71,7 +73,10 @@ class TerminalBarsViewModel
             resultStatus: ResultStatus<List<Bar>, ErrorType>,
         ): TerminalBarsScreenState =
             when (val currentStatus = resultStatus) {
-                is ResultStatus.Error -> TerminalBarsScreenState.Error(currentStatus.error.type)
+                is ResultStatus.Error ->
+                    TerminalBarsScreenState.Error(
+                        errorMessageProvider.getErrorMessage(currentStatus.error),
+                    )
                 ResultStatus.Initial -> TerminalBarsScreenState.Loading
                 is ResultStatus.Success -> {
                     val currentBars = currentStatus.data

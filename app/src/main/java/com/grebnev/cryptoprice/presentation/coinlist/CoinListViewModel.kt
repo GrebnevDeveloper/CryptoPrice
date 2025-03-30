@@ -8,6 +8,7 @@ import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.usecase.GetCoinListUseCase
 import com.grebnev.cryptoprice.domain.usecase.GetTimeLastUpdate
 import com.grebnev.cryptoprice.domain.usecase.LoadDataUseCase
+import com.grebnev.cryptoprice.presentation.base.ErrorMessageProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,6 +24,7 @@ class CoinListViewModel
         private val loadDataUseCase: LoadDataUseCase,
         private val getCoinListUseCase: GetCoinListUseCase,
         private val getTimeLastUpdate: GetTimeLastUpdate,
+        private val errorMessageProvider: ErrorMessageProvider,
     ) : ViewModel() {
         private val exceptionHandler =
             CoroutineExceptionHandler { _, throwable ->
@@ -44,7 +46,7 @@ class CoinListViewModel
         ): CoinListScreenState =
             when (coinListSate) {
                 is ResultStatus.Error ->
-                    CoinListScreenState.Error(coinListSate.error.type)
+                    CoinListScreenState.Error(errorMessageProvider.getErrorMessage(coinListSate.error))
 
                 ResultStatus.Initial ->
                     CoinListScreenState.Loading
