@@ -66,9 +66,6 @@ class CoinListFragment : Fragment() {
                     binding.errorScreen.visibility = View.VISIBLE
                 }
 
-                CoinListScreenState.Initial -> {
-                }
-
                 CoinListScreenState.Loading -> {
                     binding.rvCoinPriceList.visibility = View.GONE
                     binding.pbLoadingIndicator.visibility = View.VISIBLE
@@ -108,6 +105,7 @@ class CoinListFragment : Fragment() {
                     binding.pbLoadingIndicator.visibility = View.GONE
                     binding.errorScreen.visibility = View.GONE
                 }
+                CoinListScreenState.Initial -> {}
             }
         }
     }

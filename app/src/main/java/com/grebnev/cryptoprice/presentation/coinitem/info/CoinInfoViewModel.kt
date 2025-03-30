@@ -6,6 +6,7 @@ import com.grebnev.core.wrappers.ErrorType
 import com.grebnev.core.wrappers.ResultStatus
 import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.usecase.GetCoinInfoUseCase
+import com.grebnev.cryptoprice.presentation.base.ErrorMessageProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,7 @@ class CoinInfoViewModel
     @Inject
     constructor(
         private val getCoinItemUseCase: GetCoinInfoUseCase,
+        private val errorMessageProvider: ErrorMessageProvider,
     ) : ViewModel() {
         private val coroutineExceptionHandler =
             CoroutineExceptionHandler { _, throwable ->
@@ -38,7 +40,10 @@ class CoinInfoViewModel
             resultStatus: ResultStatus<Coin, ErrorType>,
         ): CoinInfoScreenState =
             when (val currentStatus = resultStatus) {
-                is ResultStatus.Error -> CoinInfoScreenState.Error(currentStatus.error.type)
+                is ResultStatus.Error ->
+                    CoinInfoScreenState.Error(
+                        errorMessageProvider.getErrorMessage(currentStatus.error),
+                    )
                 ResultStatus.Initial -> CoinInfoScreenState.Loading
                 is ResultStatus.Success -> CoinInfoScreenState.Content(currentStatus.data)
             }
