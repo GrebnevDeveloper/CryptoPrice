@@ -5,16 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.key
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.grebnev.cryptoprice.databinding.FragmentTerminalBarsBinding
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
-import com.grebnev.cryptoprice.presentation.coinitem.terminal.bars.TerminalBarsState
 import com.grebnev.cryptoprice.presentation.coinitem.terminal.bars.TerminalScreen
-import com.grebnev.cryptoprice.presentation.coinitem.terminal.bars.TimeFrame
 import javax.inject.Inject
 
 class TerminalBarsFragment : Fragment() {
@@ -53,30 +51,45 @@ class TerminalBarsFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
-        displayTerminalBars(fromSymbol = fromSymbol)
+        displayTerminalBars(fromSymbol)
     }
 
-    private fun displayTerminalBars(
-        timeFrame: TimeFrame = TimeFrame.DAILY,
-        fromSymbol: String,
-    ) {
-        viewModel.loadBarsForCoin(timeFrame, fromSymbol)
-        viewModel.barState.asLiveData().observe(viewLifecycleOwner) { terminalBarsState ->
-            if (terminalBarsState is TerminalBarsState.Content) {
-                val isVisibleCoinInfo = if (terminalBarsState.isFullScreen) View.GONE else View.VISIBLE
-            }
-            binding.composeViewTerminalBars.setContent {
-                TerminalScreen(
-                    modifier = Modifier,
-                    terminalBarsState = terminalBarsState,
-                    onRetryClickListener = {
-                        viewModel.loadBarsForCoin(timeFrame, fromSymbol)
-                    },
-                    onTimeFrameSelected = { timeFrame ->
-                        viewModel.changeTimeFrameStatus(timeFrame, fromSymbol)
-                    },
-                    onChangedStatusFullScreenListener = { viewModel.changeFullScreenStatus() },
-                )
+    private fun displayTerminalBars(fromSymbol: String) {
+        viewModel.loadBarsForCoin(fromSymbol)
+        viewModel.barState.asLiveData().observe(viewLifecycleOwner) { screen ->
+            when (screen) {
+                is TerminalBarsScreenState.Content -> {
+                    val currentTimeFrame = viewModel.timeFrame.value
+                    binding.composeViewTerminalBars.setContent {
+                        key(currentTimeFrame) {
+                            TerminalScreen(
+                                bars = screen.bars,
+                                timeFrame = currentTimeFrame,
+                                onTimeFrameSelected = { timeFrame ->
+                                    viewModel.changeTimeFrameStatus(timeFrame, fromSymbol)
+                                },
+                            )
+                        }
+                    }
+                    binding.composeViewTerminalBars.visibility = View.VISIBLE
+                    binding.pbLoadingIndicator.visibility = View.GONE
+                    binding.errorScreen.visibility = View.GONE
+                }
+                is TerminalBarsScreenState.Error -> {
+                    binding.errorScreen.setErrorMessage(screen.message)
+                    binding.errorScreen.setOnRetryListener {
+                        viewModel.loadBarsForCoin(fromSymbol)
+                    }
+                    binding.composeViewTerminalBars.visibility = View.GONE
+                    binding.pbLoadingIndicator.visibility = View.GONE
+                    binding.errorScreen.visibility = View.VISIBLE
+                }
+                TerminalBarsScreenState.Loading -> {
+                    binding.composeViewTerminalBars.visibility = View.GONE
+                    binding.pbLoadingIndicator.visibility = View.VISIBLE
+                    binding.errorScreen.visibility = View.GONE
+                }
+                TerminalBarsScreenState.Initial -> {}
             }
         }
     }
