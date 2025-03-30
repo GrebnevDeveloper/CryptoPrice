@@ -7,7 +7,7 @@ import com.grebnev.core.wrappers.ErrorType
 import com.grebnev.core.wrappers.ResultStatus
 import com.grebnev.cryptoprice.domain.entity.Bar
 import com.grebnev.cryptoprice.domain.usecase.GetBarsForCoinUseCase
-import com.grebnev.cryptoprice.presentation.coinitem.terminal.bars.TerminalBarsState
+import com.grebnev.cryptoprice.presentation.base.ErrorMessageProvider
 import com.grebnev.cryptoprice.presentation.coinitem.terminal.bars.TimeFrame
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,31 +21,31 @@ class TerminalBarsViewModel
     @Inject
     constructor(
         private val getBarsForCoinUseCase: GetBarsForCoinUseCase,
+        private val errorMessageProvider: ErrorMessageProvider,
     ) : ViewModel() {
         private val coroutineExceptionHandler =
             CoroutineExceptionHandler { _, throwable ->
                 Timber.e(throwable)
                 val typeError = ErrorHandler.getErrorTypeByError(throwable)
-                _barState.value = TerminalBarsState.Error(typeError.type)
+                _barState.value = TerminalBarsScreenState.Error(typeError.type)
             }
 
-        private val _barState = MutableStateFlow<TerminalBarsState>(TerminalBarsState.Loading)
-        val barState: StateFlow<TerminalBarsState> = _barState
+        private val _barState = MutableStateFlow<TerminalBarsScreenState>(TerminalBarsScreenState.Initial)
+        val barState: StateFlow<TerminalBarsScreenState> = _barState
 
-        fun loadBarsForCoin(
-            timeFrame: TimeFrame,
-            fromSymbol: String,
-        ) {
+        private val _timeFrame = MutableStateFlow<TimeFrame>(TimeFrame.DAILY)
+        val timeFrame: StateFlow<TimeFrame> = _timeFrame
+
+        fun loadBarsForCoin(fromSymbol: String) {
             viewModelScope.launch(coroutineExceptionHandler) {
-                _barState.value = TerminalBarsState.Loading
+                _barState.value = TerminalBarsScreenState.Loading
+                val currentTimeFrame = timeFrame.value
                 getBarsForCoinUseCase(
-                    timeFrame = timeFrame.value,
+                    timeFrame = currentTimeFrame.value,
                     fromSymbol = fromSymbol,
                 ).map { resultState ->
-                    mapResultStatusToBarState(
+                    mapResultStatusToBarScreenState(
                         resultStatus = resultState,
-                        timeFrame = timeFrame,
-                        isFullScreen = false,
                     )
                 }.collect { _barState.value = it }
             }
@@ -56,47 +56,32 @@ class TerminalBarsViewModel
             fromSymbol: String,
         ) {
             viewModelScope.launch(coroutineExceptionHandler) {
-                var isFullScreen = false
-                if (barState.value is TerminalBarsState.Content) {
-                    isFullScreen = (barState.value as TerminalBarsState.Content).isFullScreen
-                }
-                _barState.value = TerminalBarsState.Loading
+                _barState.value = TerminalBarsScreenState.Loading
+                _timeFrame.value = timeFrame
                 getBarsForCoinUseCase(
                     timeFrame = timeFrame.value,
                     fromSymbol = fromSymbol,
                 ).map { resultState ->
-                    mapResultStatusToBarState(
+                    mapResultStatusToBarScreenState(
                         resultStatus = resultState,
-                        timeFrame = timeFrame,
-                        isFullScreen = isFullScreen,
                     )
                 }.collect { _barState.value = it }
             }
         }
 
-        fun changeFullScreenStatus() {
-            val currentBarsState = _barState.value
-            if (currentBarsState is TerminalBarsState.Content) {
-                _barState.value = currentBarsState.copy(isFullScreen = !currentBarsState.isFullScreen)
-            }
-        }
-
-        private fun mapResultStatusToBarState(
+        private fun mapResultStatusToBarScreenState(
             resultStatus: ResultStatus<List<Bar>, ErrorType>,
-            timeFrame: TimeFrame,
-            isFullScreen: Boolean,
-        ): TerminalBarsState =
+        ): TerminalBarsScreenState =
             when (val currentStatus = resultStatus) {
-                is ResultStatus.Error -> TerminalBarsState.Error(currentStatus.error.type)
-                ResultStatus.Initial -> TerminalBarsState.Loading
+                is ResultStatus.Error ->
+                    TerminalBarsScreenState.Error(
+                        errorMessageProvider.getErrorMessage(currentStatus.error),
+                    )
+                ResultStatus.Initial -> TerminalBarsScreenState.Loading
                 is ResultStatus.Success -> {
                     val currentBars = currentStatus.data
                     val sortedBar = currentBars.sortedByDescending { it.time }
-                    TerminalBarsState.Content(
-                        bars = sortedBar,
-                        timeFrame = timeFrame,
-                        isFullScreen = isFullScreen,
-                    )
+                    TerminalBarsScreenState.Content(sortedBar)
                 }
             }
     }

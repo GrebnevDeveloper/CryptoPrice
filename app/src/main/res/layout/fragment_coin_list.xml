@@ -36,7 +36,7 @@
         </LinearLayout>
 
         <com.google.android.material.textview.MaterialTextView
-            style="@style/TextAppearance.Material3.HeadlineSmall"
+            style="@style/TextAppearance.Material3.ActionBar.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -139,10 +139,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:indeterminate="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_headers"
         tools:visibility="visible" />
+
+    <com.grebnev.cryptoprice.presentation.base.ErrorScreenView
+        android:id="@+id/error_screen"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_headers"
+        app:retryButtonText="@string/retry"
+        app:showRetryButton="false"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,20 +6,12 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CloseFullscreen
-import androidx.compose.material.icons.filled.OpenInFull
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -51,83 +43,18 @@ private const val MIN_VISIBLE_BARS_COUNT = 20
 @Composable
 fun TerminalScreen(
     modifier: Modifier = Modifier,
-    terminalBarsState: TerminalBarsState,
-    onRetryClickListener: () -> Unit,
+    bars: List<Bar>,
+    timeFrame: TimeFrame,
     onTimeFrameSelected: (TimeFrame) -> Unit,
-    onChangedStatusFullScreenListener: () -> Unit,
 ) {
-    when (terminalBarsState) {
-        is TerminalBarsState.Content -> {
-            TerminalScreenContent(
-                bars = terminalBarsState.bars,
-                timeFrame = terminalBarsState.timeFrame,
-                onTimeFrameSelected = { timeFrame ->
-                    onTimeFrameSelected(timeFrame)
-                },
-                onChangedStatusFullScreenListener = onChangedStatusFullScreenListener,
-                isFullScreen = terminalBarsState.isFullScreen,
-                modifier = modifier,
-            )
-        }
-
-        is TerminalBarsState.Loading -> {
-            Box(
-                modifier =
-                    modifier
-                        .fillMaxSize()
-                        .background(colorResource(R.color.md_theme_background)),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-
-        is TerminalBarsState.Initial -> {}
-
-        is TerminalBarsState.Error -> {
-            ErrorScreen(
-                errorMessage = terminalBarsState.message,
-                onRetryClickListener = onRetryClickListener,
-                modifier = modifier,
-            )
-        }
-    }
-}
-
-@Composable
-fun ErrorScreen(
-    errorMessage: String,
-    onRetryClickListener: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(colorResource(R.color.md_theme_background)),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            Text(
-                text = errorMessage,
-                color = colorResource(R.color.md_theme_onPrimary),
-                fontSize = 16.sp,
-            )
-
-            IconButton(
-                onClick = onRetryClickListener,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = "Retry",
-                    tint = colorResource(R.color.md_theme_onPrimary),
-                )
-            }
-        }
-    }
+    TerminalScreenContent(
+        bars = bars,
+        timeFrame = timeFrame,
+        onTimeFrameSelected = { timeFrame ->
+            onTimeFrameSelected(timeFrame)
+        },
+        modifier = modifier,
+    )
 }
 
 @Composable
@@ -135,8 +62,6 @@ private fun TerminalScreenContent(
     bars: List<Bar>, // Список баров (данные графика)
     timeFrame: TimeFrame, // Выбранный временной интервал
     onTimeFrameSelected: (TimeFrame) -> Unit, // Обработчик выбора временного интервала
-    onChangedStatusFullScreenListener: () -> Unit, // Слушатель изменеия статуса полного экрана
-    isFullScreen: Boolean, // Статус полного экрана
     modifier: Modifier = Modifier,
 ) {
     // Состояние терминала, которое зависит от списка баров
@@ -164,8 +89,6 @@ private fun TerminalScreenContent(
     ChangeStatusTerminal(
         timeFrame = timeFrame,
         onTimeFrameSelected = onTimeFrameSelected,
-        onChangedStatusFullScreenListener = onChangedStatusFullScreenListener,
-        isFullScreen = isFullScreen,
     )
 }
 
@@ -173,8 +96,6 @@ private fun TerminalScreenContent(
 private fun ChangeStatusTerminal(
     timeFrame: TimeFrame,
     onTimeFrameSelected: (TimeFrame) -> Unit,
-    onChangedStatusFullScreenListener: () -> Unit,
-    isFullScreen: Boolean,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -191,11 +112,6 @@ private fun ChangeStatusTerminal(
             TimeFrames(
                 selectedFrame = timeFrame,
                 onTimeFrameSelected = onTimeFrameSelected,
-            )
-            // Иконка полноэкранного режима
-            FullScreenIcon(
-                isFullScreen = isFullScreen,
-                onChangedStatusFullScreenListener = onChangedStatusFullScreenListener,
             )
         }
     }
@@ -238,32 +154,6 @@ private fun TimeFrames(
                     ),
             )
         }
-    }
-}
-
-@Composable
-private fun FullScreenIcon(
-    isFullScreen: Boolean,
-    onChangedStatusFullScreenListener: () -> Unit,
-) {
-    IconButton(
-        onClick = onChangedStatusFullScreenListener,
-    ) {
-        Icon(
-            imageVector =
-                if (isFullScreen) {
-                    Icons.Default.CloseFullscreen
-                } else {
-                    Icons.Default.OpenInFull
-                },
-            contentDescription =
-                if (isFullScreen) {
-                    "Exit Fullscreen"
-                } else {
-                    "Enter Fullscreen"
-                },
-            tint = colorResource(R.color.md_theme_primary),
-        )
     }
 }
 

@@ -61,12 +61,19 @@ class CoinInfoFragment : Fragment() {
         viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
             when (screen) {
                 is CoinInfoScreenState.Error -> {
+                    binding.errorScreen.setErrorMessage(screen.message)
+                    binding.cvCoinInfo.visibility = View.GONE
+                    binding.pbLoadingIndicator.visibility = View.GONE
+                    binding.errorScreen.visibility = View.VISIBLE
                 }
 
                 CoinInfoScreenState.Initial -> {
                 }
 
                 CoinInfoScreenState.Loading -> {
+                    binding.cvCoinInfo.visibility = View.GONE
+                    binding.pbLoadingIndicator.visibility = View.VISIBLE
+                    binding.errorScreen.visibility = View.GONE
                 }
 
                 is CoinInfoScreenState.Content -> {
@@ -126,6 +133,10 @@ class CoinInfoFragment : Fragment() {
                             ciLastUpdate.setValue(coin.lastUpdate)
                             ciLastUpdate.showDivider(false)
                             Picasso.get().load(coin.imageUrl).into(ivLogoCoinDetail)
+
+                            binding.cvCoinInfo.visibility = View.VISIBLE
+                            binding.pbLoadingIndicator.visibility = View.GONE
+                            binding.errorScreen.visibility = View.GONE
                         }
                     }
                 }
