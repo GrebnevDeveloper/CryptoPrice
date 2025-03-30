@@ -142,5 +142,29 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/pb_loading_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_slash"
+            tools:visibility="visible" />
+
+        <com.grebnev.cryptoprice.presentation.base.ErrorScreenView
+            android:id="@+id/error_screen"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_slash"
+            app:retryButtonText="@string/retry"
+            app:showRetryButton="false" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

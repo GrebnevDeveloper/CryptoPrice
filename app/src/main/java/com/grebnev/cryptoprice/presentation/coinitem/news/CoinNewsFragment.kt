@@ -59,14 +59,23 @@ class CoinNewsFragment : Fragment() {
                     adapter.submitList(screen.news)
                     binding.rvCoinNewsList.visibility = View.VISIBLE
                     binding.pbLoadingIndicator.visibility = View.GONE
+                    binding.errorScreen.visibility = View.GONE
                 }
                 is CoinNewsScreenState.Error -> {
+                    binding.errorScreen.setErrorMessage(screen.message)
+                    binding.errorScreen.setOnRetryListener {
+                        viewModel.getNewsForCoin(category)
+                    }
+                    binding.rvCoinNewsList.visibility = View.GONE
+                    binding.pbLoadingIndicator.visibility = View.GONE
+                    binding.errorScreen.visibility = View.VISIBLE
                 }
                 CoinNewsScreenState.Initial -> {
                 }
                 CoinNewsScreenState.Loading -> {
                     binding.rvCoinNewsList.visibility = View.GONE
                     binding.pbLoadingIndicator.visibility = View.VISIBLE
+                    binding.errorScreen.visibility = View.GONE
                 }
             }
         }
