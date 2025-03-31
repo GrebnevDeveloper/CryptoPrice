@@ -8,7 +8,7 @@ import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.usecase.GetCoinListUseCase
 import com.grebnev.cryptoprice.domain.usecase.GetTimeLastUpdate
 import com.grebnev.cryptoprice.domain.usecase.LoadDataUseCase
-import com.grebnev.cryptoprice.presentation.base.ErrorMessageProvider
+import com.grebnev.cryptoprice.presentation.base.error.ErrorMessageProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
