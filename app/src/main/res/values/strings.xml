@@ -27,4 +27,5 @@
     <string name="network_error_message">Network problems. Check the network connection.</string>
     <string name="database_error_message">There was a problem working with the database.</string>
     <string name="unknown_error_message">An unknown error occurred during the request.</string>
+    <string name="no_internet_connection">Нет подключения к интернету</string>
 </resources>

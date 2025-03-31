@@ -154,7 +154,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_slash"
             tools:visibility="visible" />
 
-        <com.grebnev.cryptoprice.presentation.base.ErrorScreenView
+        <com.grebnev.cryptoprice.presentation.base.error.ErrorScreenView
             android:id="@+id/error_screen"
             android:layout_width="match_parent"
             android:layout_height="0dp"
