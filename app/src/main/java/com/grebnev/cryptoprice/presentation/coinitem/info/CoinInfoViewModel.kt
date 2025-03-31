@@ -6,7 +6,7 @@ import com.grebnev.core.wrappers.ErrorType
 import com.grebnev.core.wrappers.ResultStatus
 import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.usecase.GetCoinInfoUseCase
-import com.grebnev.cryptoprice.presentation.base.ErrorMessageProvider
+import com.grebnev.cryptoprice.presentation.base.error.ErrorMessageProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

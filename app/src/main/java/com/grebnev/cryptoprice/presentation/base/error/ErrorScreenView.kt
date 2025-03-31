@@ -1,4 +1,4 @@
-package com.grebnev.cryptoprice.presentation.base
+package com.grebnev.cryptoprice.presentation.base.error
 
 import android.content.Context
 import android.util.AttributeSet
