@@ -48,14 +48,14 @@ class CoinListViewModel
                 is ResultStatus.Error ->
                     CoinListScreenState.Error(errorMessageProvider.getErrorMessage(coinListSate.error))
                 is ResultStatus.Success -> {
-                    CoinListScreenState.Success(
+                    CoinListScreenState.Content(
                         coinListSate.data,
                         timeLastUpdateState.value,
                     )
                 }
             }
 
-        private val timeLastUpdateState = MutableStateFlow<String>("Loading...")
+        private val timeLastUpdateState = MutableStateFlow<String>("")
 
         private fun getLastUpdate() {
             viewModelScope.launch(exceptionHandler) {
