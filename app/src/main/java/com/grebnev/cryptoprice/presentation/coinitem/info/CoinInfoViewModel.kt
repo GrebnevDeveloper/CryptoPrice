@@ -44,7 +44,6 @@ class CoinInfoViewModel
                     CoinInfoScreenState.Error(
                         errorMessageProvider.getErrorMessage(currentStatus.error),
                     )
-                ResultStatus.Initial -> CoinInfoScreenState.Loading
                 is ResultStatus.Success -> CoinInfoScreenState.Content(currentStatus.data)
             }
     }

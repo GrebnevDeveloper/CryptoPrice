@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.retry
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -43,6 +44,9 @@ class CoinListRepositoryImpl
                     }.collect {
                         emit(ResultStatus.Success(it) as ResultStatus<List<Coin>, ErrorType>)
                     }
+            }.retry(ErrorHandler.MAX_COUNT_RETRY) {
+                delay(ErrorHandler.RETRY_TIMEOUT)
+                true
             }.catch { throwable ->
                 Timber.e(throwable)
                 emit(ResultStatus.Error(ErrorHandler.getErrorTypeByError(throwable)))
