@@ -7,9 +7,11 @@ import com.grebnev.cryptoprice.data.database.CoinDao
 import com.grebnev.cryptoprice.data.mapper.CoinMapper
 import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.repository.CoinRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -30,5 +32,5 @@ class CoinRepositoryImpl
                     }
             }.catch { throwable ->
                 emit(ResultStatus.Error(ErrorHandler.getErrorTypeByError(throwable)))
-            }
+            }.flowOn(Dispatchers.Default)
     }

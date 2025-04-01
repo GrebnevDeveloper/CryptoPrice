@@ -7,9 +7,11 @@ import com.grebnev.cryptoprice.data.mapper.NewsMapper
 import com.grebnev.cryptoprice.data.network.ApiService
 import com.grebnev.cryptoprice.domain.entity.News
 import com.grebnev.cryptoprice.domain.repository.NewsRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -28,5 +30,5 @@ class NewsRepositoryImpl
                 Timber.e(throwable)
                 val errorType = ErrorHandler.getErrorTypeByError(throwable)
                 emit(ResultStatus.Error(errorType))
-            }
+            }.flowOn(Dispatchers.Default)
     }
