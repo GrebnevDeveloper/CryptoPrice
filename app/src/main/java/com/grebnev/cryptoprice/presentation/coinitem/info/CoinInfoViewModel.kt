@@ -1,6 +1,8 @@
 package com.grebnev.cryptoprice.presentation.coinitem.info
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.grebnev.core.handlers.ErrorHandler
 import com.grebnev.core.wrappers.ErrorType
@@ -10,9 +12,8 @@ import com.grebnev.cryptoprice.domain.usecase.GetCoinInfoUseCase
 import com.grebnev.cryptoprice.presentation.base.error.ErrorMessageProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,13 +32,14 @@ class CoinInfoViewModel
                     CoinInfoScreenState.Error(errorMessageProvider.getErrorMessage(typeError))
             }
         private val _screenState = MutableStateFlow<CoinInfoScreenState>(CoinInfoScreenState.Initial)
-        val screenState: StateFlow<CoinInfoScreenState> = _screenState.asStateFlow()
+        val screenState: LiveData<CoinInfoScreenState> = _screenState.asLiveData()
 
         fun getCoinInfo(fromSymbol: String) {
             _screenState.value = CoinInfoScreenState.Loading
             viewModelScope.launch(coroutineExceptionHandler) {
                 getCoinItemUseCase(fromSymbol)
                     .map { mapResultStatusToScreenState(it) }
+                    .onStart { CoinInfoScreenState.Loading }
                     .collect { _screenState.value = it }
             }
         }

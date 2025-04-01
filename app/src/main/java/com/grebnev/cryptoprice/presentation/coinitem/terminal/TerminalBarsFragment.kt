@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.compose.runtime.key
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import com.grebnev.cryptoprice.databinding.FragmentTerminalBarsBinding
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
+import com.grebnev.cryptoprice.presentation.base.Constants
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
 import com.grebnev.cryptoprice.presentation.coinitem.terminal.bars.TerminalScreen
 import javax.inject.Inject
@@ -50,13 +50,17 @@ class TerminalBarsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
+        val fromSymbol =
+            requireArguments().getString(
+                Constants.Args.EXTRA_FROM_SYMBOL,
+                Constants.Args.EMPTY_SYMBOL,
+            )
         displayTerminalBars(fromSymbol)
     }
 
     private fun displayTerminalBars(fromSymbol: String) {
         viewModel.loadBarsForCoin(fromSymbol)
-        viewModel.barState.asLiveData().observe(viewLifecycleOwner) { screen ->
+        viewModel.barState.observe(viewLifecycleOwner) { screen ->
             when (screen) {
                 is TerminalBarsScreenState.Content -> {
                     val currentTimeFrame = viewModel.timeFrame.value
@@ -100,14 +104,11 @@ class TerminalBarsFragment : Fragment() {
     }
 
     companion object {
-        private const val EXTRA_FROM_SYMBOL = "from_symbol"
-        private const val EMPTY_SYMBOL = ""
-
         fun newInstance(fromSymbol: String): TerminalBarsFragment =
             TerminalBarsFragment().apply {
                 arguments =
                     Bundle().apply {
-                        putString(EXTRA_FROM_SYMBOL, fromSymbol)
+                        putString(Constants.Args.EXTRA_FROM_SYMBOL, fromSymbol)
                     }
             }
     }

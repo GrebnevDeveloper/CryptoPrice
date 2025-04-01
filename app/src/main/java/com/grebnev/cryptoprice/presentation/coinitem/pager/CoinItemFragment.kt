@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.grebnev.cryptoprice.R
 import com.grebnev.cryptoprice.databinding.FragmentCoinItemBinding
+import com.grebnev.cryptoprice.presentation.base.Constants
 import com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoFragment
 import com.grebnev.cryptoprice.presentation.coinitem.news.CoinNewsFragment
 import com.grebnev.cryptoprice.presentation.coinitem.terminal.TerminalBarsFragment
@@ -32,7 +33,11 @@ class CoinItemFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
+        val fromSymbol =
+            requireArguments().getString(
+                Constants.Args.EXTRA_FROM_SYMBOL,
+                Constants.Args.EMPTY_SYMBOL,
+            )
 
         with(binding) {
             toolbar.title = fromSymbol
@@ -65,14 +70,11 @@ class CoinItemFragment : Fragment() {
     }
 
     companion object {
-        private const val EXTRA_FROM_SYMBOL = "from_symbol"
-        private const val EMPTY_SYMBOL = ""
-
         fun newInstance(fromSymbol: String): CoinItemFragment =
             CoinItemFragment().apply {
                 arguments =
                     Bundle().apply {
-                        putString(EXTRA_FROM_SYMBOL, fromSymbol)
+                        putString(Constants.Args.EXTRA_FROM_SYMBOL, fromSymbol)
                     }
             }
     }
