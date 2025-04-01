@@ -1,6 +1,8 @@
 package com.grebnev.cryptoprice.presentation.coinitem.terminal
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.grebnev.core.handlers.ErrorHandler
 import com.grebnev.core.wrappers.ErrorType
@@ -27,27 +29,25 @@ class TerminalBarsViewModel
             CoroutineExceptionHandler { _, throwable ->
                 Timber.e(throwable)
                 val typeError = ErrorHandler.getErrorTypeByError(throwable)
-                _barState.value = TerminalBarsScreenState.Error(typeError.type)
+                _barState.value =
+                    TerminalBarsScreenState.Error(errorMessageProvider.getErrorMessage(typeError))
             }
 
         private val _barState = MutableStateFlow<TerminalBarsScreenState>(TerminalBarsScreenState.Initial)
-        val barState: StateFlow<TerminalBarsScreenState> = _barState
+        val barState: LiveData<TerminalBarsScreenState> = _barState.asLiveData()
 
         private val _timeFrame = MutableStateFlow<TimeFrame>(TimeFrame.DAILY)
         val timeFrame: StateFlow<TimeFrame> = _timeFrame
 
         fun loadBarsForCoin(fromSymbol: String) {
             viewModelScope.launch(coroutineExceptionHandler) {
-                _barState.value = TerminalBarsScreenState.Loading
                 val currentTimeFrame = timeFrame.value
+                _barState.value = TerminalBarsScreenState.Loading
                 getBarsForCoinUseCase(
                     timeFrame = currentTimeFrame.value,
                     fromSymbol = fromSymbol,
-                ).map { resultState ->
-                    mapResultStatusToBarScreenState(
-                        resultStatus = resultState,
-                    )
-                }.collect { _barState.value = it }
+                ).map { mapResultStatusToBarScreenState(it) }
+                    .collect { _barState.value = it }
             }
         }
 
@@ -56,29 +56,27 @@ class TerminalBarsViewModel
             fromSymbol: String,
         ) {
             viewModelScope.launch(coroutineExceptionHandler) {
-                _barState.value = TerminalBarsScreenState.Loading
                 _timeFrame.value = timeFrame
+                _barState.value = TerminalBarsScreenState.Loading
                 getBarsForCoinUseCase(
                     timeFrame = timeFrame.value,
                     fromSymbol = fromSymbol,
-                ).map { resultState ->
-                    mapResultStatusToBarScreenState(
-                        resultStatus = resultState,
-                    )
-                }.collect { _barState.value = it }
+                ).map { mapResultStatusToBarScreenState(it) }
+                    .collect { _barState.value = it }
             }
         }
 
         private fun mapResultStatusToBarScreenState(
             resultStatus: ResultStatus<List<Bar>, ErrorType>,
         ): TerminalBarsScreenState =
-            when (val currentStatus = resultStatus) {
+            when (resultStatus) {
                 is ResultStatus.Error ->
                     TerminalBarsScreenState.Error(
-                        errorMessageProvider.getErrorMessage(currentStatus.error),
+                        errorMessageProvider.getErrorMessage(resultStatus.error),
                     )
+
                 is ResultStatus.Success -> {
-                    val currentBars = currentStatus.data
+                    val currentBars = resultStatus.data
                     val sortedBar = currentBars.sortedByDescending { it.time }
                     TerminalBarsScreenState.Content(sortedBar)
                 }

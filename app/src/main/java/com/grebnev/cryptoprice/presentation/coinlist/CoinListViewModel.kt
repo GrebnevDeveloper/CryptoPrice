@@ -1,6 +1,7 @@
 package com.grebnev.cryptoprice.presentation.coinlist
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.grebnev.core.wrappers.ErrorType
 import com.grebnev.core.wrappers.ResultStatus
@@ -11,9 +12,8 @@ import com.grebnev.cryptoprice.domain.usecase.LoadDataUseCase
 import com.grebnev.cryptoprice.presentation.base.error.ErrorMessageProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -35,11 +35,8 @@ class CoinListViewModel
         val screenState =
             coinListFlow
                 .map { mapResultStateToScreenState(it) }
-                .stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.Lazily,
-                    initialValue = CoinListScreenState.Loading,
-                )
+                .onStart { CoinListScreenState.Loading }
+                .asLiveData()
 
         private fun mapResultStateToScreenState(
             coinListSate: ResultStatus<List<Coin>, ErrorType>,

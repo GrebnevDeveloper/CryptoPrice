@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.grebnev.cryptoprice.R
@@ -38,7 +37,7 @@ class CoinListFragment : Fragment() {
 
     private var _binding: FragmentCoinListBinding? = null
     private val binding: FragmentCoinListBinding
-        get() = _binding ?: throw RuntimeException("FragmentCoinItemBinding is null")
+        get() = _binding ?: throw RuntimeException("FragmentCoinListBinding is null")
 
     override fun onAttach(context: Context) {
         component.inject(this)
@@ -62,7 +61,7 @@ class CoinListFragment : Fragment() {
         setOnCoinClickListener()
         binding.rvCoinPriceList.addItemDecoration(createDividerForCoinPriceList())
         binding.rvCoinPriceList.adapter = adapter
-        viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
+        viewModel.screenState.observe(viewLifecycleOwner) { screen ->
             when (screen) {
                 is CoinListScreenState.Error -> {
                     binding.errorScreen.setErrorMessage(screen.message)
@@ -79,14 +78,21 @@ class CoinListFragment : Fragment() {
                 }
 
                 is CoinListScreenState.Content -> {
-                    binding.tvTimeLastUpdate.text = screen.timeLastUpdate
-                    adapter.submitList(screen.coins)
-                    binding.rvCoinPriceList.visibility = View.VISIBLE
-                    binding.pbLoadingIndicator.visibility = View.GONE
-                    binding.errorScreen.visibility = View.GONE
+                    if (screen.coins.isNotEmpty()) {
+                        binding.tvTimeLastUpdate.text = screen.timeLastUpdate
+                        adapter.submitList(screen.coins)
+                        binding.rvCoinPriceList.visibility = View.VISIBLE
+                        binding.pbLoadingIndicator.visibility = View.GONE
+                        binding.errorScreen.visibility = View.GONE
+                    }
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setOnCoinClickListener() {

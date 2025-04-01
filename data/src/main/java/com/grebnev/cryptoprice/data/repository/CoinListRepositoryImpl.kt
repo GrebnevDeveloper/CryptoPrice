@@ -5,7 +5,6 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.grebnev.core.extensions.convertTimestampToTimeByPattern
-import com.grebnev.core.extensions.mergeWith
 import com.grebnev.core.handlers.ErrorHandler
 import com.grebnev.core.wrappers.ErrorType
 import com.grebnev.core.wrappers.ResultStatus
@@ -51,11 +50,9 @@ class CoinListRepositoryImpl
                 Timber.e(throwable)
                 emit(ResultStatus.Error(ErrorHandler.getErrorTypeByError(throwable)))
             }.flowOn(Dispatchers.Default)
-        private val refreshedListFlow = MutableSharedFlow<ResultStatus<List<Coin>, ErrorType>>()
+        private val errorFlow = MutableSharedFlow<ErrorType>(replay = 1)
 
-        override val getCoinList: Flow<ResultStatus<List<Coin>, ErrorType>> =
-            coinListFlow
-                .mergeWith(refreshedListFlow)
+        override val getCoinList: Flow<ResultStatus<List<Coin>, ErrorType>> = coinListFlow
 
         override suspend fun loadData() {
             val workManager = WorkManager.getInstance(application)
@@ -76,7 +73,7 @@ class CoinListRepositoryImpl
                             Timber.e("Error in worker")
                             val outputError = workInfo.outputData.getString(RefreshDataWorker.ERROR_KEY)
                             val typeError = ErrorHandler.getErrorTypeByValue(outputError)
-                            refreshedListFlow.emit(ResultStatus.Error(typeError))
+                            errorFlow.emit(typeError)
                             delay(RefreshDataWorker.REFRESH_TIMEOUT_AFTER_ERROR)
                             loadData()
                         }
@@ -85,7 +82,9 @@ class CoinListRepositoryImpl
         }
 
         override fun getTimeLastUpdate(): Flow<String> =
-            coinDao.getTimeLastUpdate().map { timeLastUpdate ->
-                timeLastUpdate.convertTimestampToTimeByPattern("HH:mm:ss")
-            }
+            coinDao
+                .getTimeLastUpdate()
+                .map { timeLastUpdate ->
+                    timeLastUpdate.convertTimestampToTimeByPattern("HH:mm:ss")
+                }.flowOn(Dispatchers.Default)
     }

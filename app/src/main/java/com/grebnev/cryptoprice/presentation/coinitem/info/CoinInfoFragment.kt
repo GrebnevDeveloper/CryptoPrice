@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import com.grebnev.core.extensions.formatWithRoundAndDelimiter
 import com.grebnev.core.extensions.formatWithRoundAndSuffix
 import com.grebnev.cryptoprice.R
 import com.grebnev.cryptoprice.databinding.FragmentCoinInfoBinding
 import com.grebnev.cryptoprice.presentation.base.BaseApplication
+import com.grebnev.cryptoprice.presentation.base.Constants
 import com.grebnev.cryptoprice.presentation.base.ViewModelFactory
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -52,13 +52,17 @@ class CoinInfoFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
+        val fromSymbol =
+            requireArguments().getString(
+                Constants.Args.EXTRA_FROM_SYMBOL,
+                Constants.Args.EMPTY_SYMBOL,
+            )
         viewModel.getCoinInfo(fromSymbol)
         displayCoinInfo()
     }
 
     private fun displayCoinInfo() {
-        viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
+        viewModel.screenState.observe(viewLifecycleOwner) { screen ->
             when (screen) {
                 is CoinInfoScreenState.Error -> {
                     binding.errorScreen.setErrorMessage(screen.message)
@@ -152,14 +156,11 @@ class CoinInfoFragment : Fragment() {
     }
 
     companion object {
-        private const val EXTRA_FROM_SYMBOL = "from_symbol"
-        private const val EMPTY_SYMBOL = ""
-
         fun newInstance(fromSymbol: String): CoinInfoFragment =
             CoinInfoFragment().apply {
                 arguments =
                     Bundle().apply {
-                        putString(EXTRA_FROM_SYMBOL, fromSymbol)
+                        putString(Constants.Args.EXTRA_FROM_SYMBOL, fromSymbol)
                     }
             }
     }
