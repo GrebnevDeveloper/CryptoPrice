@@ -8,10 +8,12 @@ import com.grebnev.cryptoprice.data.network.ApiService
 import com.grebnev.cryptoprice.domain.entity.News
 import com.grebnev.cryptoprice.domain.repository.NewsRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.retry
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -26,6 +28,9 @@ class NewsRepositoryImpl
                 val response = apiService.getNewsForCoin(category = category)
                 val news = mapper.mapNewsResponseToNewsEntity(response)
                 emit(ResultStatus.Success(news) as ResultStatus<List<News>, ErrorType>)
+            }.retry(ErrorHandler.MAX_COUNT_RETRY) {
+                delay(ErrorHandler.RETRY_TIMEOUT)
+                true
             }.catch { throwable ->
                 Timber.e(throwable)
                 val errorType = ErrorHandler.getErrorTypeByError(throwable)

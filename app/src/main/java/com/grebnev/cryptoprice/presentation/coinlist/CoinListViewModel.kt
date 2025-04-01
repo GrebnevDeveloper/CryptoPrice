@@ -47,10 +47,6 @@ class CoinListViewModel
             when (coinListSate) {
                 is ResultStatus.Error ->
                     CoinListScreenState.Error(errorMessageProvider.getErrorMessage(coinListSate.error))
-
-                ResultStatus.Initial ->
-                    CoinListScreenState.Loading
-
                 is ResultStatus.Success -> {
                     CoinListScreenState.Success(
                         coinListSate.data,

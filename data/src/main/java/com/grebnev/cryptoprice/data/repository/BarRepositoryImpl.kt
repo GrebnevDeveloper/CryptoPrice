@@ -8,10 +8,12 @@ import com.grebnev.cryptoprice.data.network.ApiService
 import com.grebnev.cryptoprice.domain.entity.Bar
 import com.grebnev.cryptoprice.domain.repository.BarRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.retry
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -33,6 +35,9 @@ class BarRepositoryImpl
                     )
                 val bars = mapper.mapBarContainerDtoToBarEntity(response)
                 emit(ResultStatus.Success(bars) as ResultStatus<List<Bar>, ErrorType>)
+            }.retry(ErrorHandler.MAX_COUNT_RETRY) {
+                delay(ErrorHandler.RETRY_TIMEOUT)
+                true
             }.catch { throwable ->
                 Timber.e(throwable)
                 val typeError = ErrorHandler.getErrorTypeByError(throwable)

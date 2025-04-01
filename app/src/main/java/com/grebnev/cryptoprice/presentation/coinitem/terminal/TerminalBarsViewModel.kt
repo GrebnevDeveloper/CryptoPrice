@@ -77,7 +77,6 @@ class TerminalBarsViewModel
                     TerminalBarsScreenState.Error(
                         errorMessageProvider.getErrorMessage(currentStatus.error),
                     )
-                ResultStatus.Initial -> TerminalBarsScreenState.Loading
                 is ResultStatus.Success -> {
                     val currentBars = currentStatus.data
                     val sortedBar = currentBars.sortedByDescending { it.time }

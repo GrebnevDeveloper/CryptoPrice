@@ -8,6 +8,4 @@ sealed class ResultStatus<out T, out E> {
     data class Error<out E>(
         val error: E,
     ) : ResultStatus<Nothing, E>()
-
-    data object Initial : ResultStatus<Nothing, Nothing>()
 }
