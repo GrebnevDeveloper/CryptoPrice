@@ -34,6 +34,8 @@ class CoinListFragment : Fragment() {
         (requireActivity().application as BaseApplication).component
     }
 
+    private val adapter by lazy { CoinAdapter(requireActivity()) }
+
     private var _binding: FragmentCoinListBinding? = null
     private val binding: FragmentCoinListBinding
         get() = _binding ?: throw RuntimeException("FragmentCoinItemBinding is null")
@@ -57,6 +59,9 @@ class CoinListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        setOnCoinClickListener()
+        binding.rvCoinPriceList.addItemDecoration(createDividerForCoinPriceList())
+        binding.rvCoinPriceList.adapter = adapter
         viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
             when (screen) {
                 is CoinListScreenState.Error -> {
@@ -67,47 +72,51 @@ class CoinListFragment : Fragment() {
                 }
 
                 CoinListScreenState.Loading -> {
+                    binding.tvTimeLastUpdate.text = getString(R.string.loading)
                     binding.rvCoinPriceList.visibility = View.GONE
                     binding.pbLoadingIndicator.visibility = View.VISIBLE
                     binding.errorScreen.visibility = View.GONE
                 }
 
-                is CoinListScreenState.Success -> {
+                is CoinListScreenState.Content -> {
                     binding.tvTimeLastUpdate.text = screen.timeLastUpdate
-                    val adapter = CoinAdapter(requireActivity())
-                    adapter.onCoinClickListener =
-                        object : CoinAdapter.OnCoinClickListener {
-                            override fun onCoinClick(coin: Coin) {
-                                if (isLandscapeOrientation()) {
-                                    requireActivity().supportFragmentManager.popBackStack()
-                                    launchCoinItemFragment(R.id.second_container, coin)
-                                } else {
-                                    launchCoinItemFragment(R.id.main_container, coin)
-                                }
-                            }
-                        }
-                    val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-                    ContextCompat.getDrawable(requireContext(), R.drawable.divider)?.let { drawable ->
-                        divider.setDrawable(drawable)
-                    } ?: run {
-                        divider.setDrawable(
-                            ContextCompat
-                                .getColor(
-                                    requireContext(),
-                                    R.color.md_theme_secondary,
-                                ).toDrawable(),
-                        )
-                    }
-                    binding.rvCoinPriceList.addItemDecoration(divider)
-                    binding.rvCoinPriceList.adapter = adapter
                     adapter.submitList(screen.coins)
                     binding.rvCoinPriceList.visibility = View.VISIBLE
                     binding.pbLoadingIndicator.visibility = View.GONE
                     binding.errorScreen.visibility = View.GONE
                 }
-                CoinListScreenState.Initial -> {}
             }
         }
+    }
+
+    private fun setOnCoinClickListener() {
+        adapter.onCoinClickListener =
+            object : CoinAdapter.OnCoinClickListener {
+                override fun onCoinClick(coin: Coin) {
+                    if (isLandscapeOrientation()) {
+                        requireActivity().supportFragmentManager.popBackStack()
+                        launchCoinItemFragment(R.id.second_container, coin)
+                    } else {
+                        launchCoinItemFragment(R.id.main_container, coin)
+                    }
+                }
+            }
+    }
+
+    private fun createDividerForCoinPriceList(): DividerItemDecoration {
+        val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        ContextCompat.getDrawable(requireContext(), R.drawable.divider)?.let { drawable ->
+            divider.setDrawable(drawable)
+        } ?: run {
+            divider.setDrawable(
+                ContextCompat
+                    .getColor(
+                        requireContext(),
+                        R.color.md_theme_secondary,
+                    ).toDrawable(),
+            )
+        }
+        return divider
     }
 
     private fun isLandscapeOrientation() =

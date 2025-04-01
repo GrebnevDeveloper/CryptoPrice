@@ -2,6 +2,7 @@ package com.grebnev.cryptoprice.presentation.coinitem.info
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.grebnev.core.handlers.ErrorHandler
 import com.grebnev.core.wrappers.ErrorType
 import com.grebnev.core.wrappers.ResultStatus
 import com.grebnev.cryptoprice.domain.entity.Coin
@@ -10,6 +11,7 @@ import com.grebnev.cryptoprice.presentation.base.error.ErrorMessageProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -24,11 +26,15 @@ class CoinInfoViewModel
         private val coroutineExceptionHandler =
             CoroutineExceptionHandler { _, throwable ->
                 Timber.e(throwable)
+                val typeError = ErrorHandler.getErrorTypeByError(throwable)
+                _screenState.value =
+                    CoinInfoScreenState.Error(errorMessageProvider.getErrorMessage(typeError))
             }
         private val _screenState = MutableStateFlow<CoinInfoScreenState>(CoinInfoScreenState.Initial)
-        val screenState: StateFlow<CoinInfoScreenState> = _screenState
+        val screenState: StateFlow<CoinInfoScreenState> = _screenState.asStateFlow()
 
         fun getCoinInfo(fromSymbol: String) {
+            _screenState.value = CoinInfoScreenState.Loading
             viewModelScope.launch(coroutineExceptionHandler) {
                 getCoinItemUseCase(fromSymbol)
                     .map { mapResultStatusToScreenState(it) }
@@ -39,11 +45,11 @@ class CoinInfoViewModel
         private fun mapResultStatusToScreenState(
             resultStatus: ResultStatus<Coin, ErrorType>,
         ): CoinInfoScreenState =
-            when (val currentStatus = resultStatus) {
+            when (resultStatus) {
                 is ResultStatus.Error ->
                     CoinInfoScreenState.Error(
-                        errorMessageProvider.getErrorMessage(currentStatus.error),
+                        errorMessageProvider.getErrorMessage(resultStatus.error),
                     )
-                is ResultStatus.Success -> CoinInfoScreenState.Content(currentStatus.data)
+                is ResultStatus.Success -> CoinInfoScreenState.Content(resultStatus.data)
             }
     }

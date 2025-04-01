@@ -53,11 +53,11 @@ class CoinInfoFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         val fromSymbol = requireArguments().getString(EXTRA_FROM_SYMBOL, EMPTY_SYMBOL)
-        displayCoinInfo(fromSymbol)
+        viewModel.getCoinInfo(fromSymbol)
+        displayCoinInfo()
     }
 
-    private fun displayCoinInfo(fromSymbol: String) {
-        viewModel.getCoinInfo(fromSymbol)
+    private fun displayCoinInfo() {
         viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
             when (screen) {
                 is CoinInfoScreenState.Error -> {
@@ -67,9 +67,6 @@ class CoinInfoFragment : Fragment() {
                     binding.errorScreen.visibility = View.VISIBLE
                 }
 
-                CoinInfoScreenState.Initial -> {
-                }
-
                 CoinInfoScreenState.Loading -> {
                     binding.cvCoinInfo.visibility = View.GONE
                     binding.pbLoadingIndicator.visibility = View.VISIBLE
@@ -77,69 +74,74 @@ class CoinInfoFragment : Fragment() {
                 }
 
                 is CoinInfoScreenState.Content -> {
-                    val changePctTemplate =
-                        requireContext().resources.getString(R.string.change_pct_24_hour_template)
-                    val costTemplate =
-                        requireContext().resources.getString(R.string.cost_template)
-                    with(binding) {
-                        with(screen) {
-                            tvFromSymbol.text = coin.fromSymbol
-                            tvToSymbol.text = coin.toSymbol
-                            ciPrice.setValue(
-                                String.format(
-                                    costTemplate,
-                                    coin.price?.formatWithRoundAndDelimiter(),
-                                ),
-                            )
-                            ciOpenPrice.setValue(
-                                String.format(
-                                    costTemplate,
-                                    coin.openDay?.formatWithRoundAndDelimiter(),
-                                ),
-                            )
-                            ciMinPrice.setValue(
-                                String.format(
-                                    costTemplate,
-                                    coin.lowDay?.formatWithRoundAndDelimiter(),
-                                ),
-                            )
-                            ciMaxPrice.setValue(
-                                String.format(
-                                    costTemplate,
-                                    coin.highDay?.formatWithRoundAndDelimiter(),
-                                ),
-                            )
-                            ciChangePctDay.setValue(
-                                String.format(
-                                    changePctTemplate,
-                                    coin.changePctDay,
-                                ),
-                            )
-                            ciVolumeDay.setValue(
-                                String.format(
-                                    costTemplate,
-                                    coin.volumeDay?.formatWithRoundAndDelimiter()
-                                        ?: getString(R.string.no_data),
-                                ),
-                            )
-                            ciMktCap.setValue(
-                                String.format(
-                                    costTemplate,
-                                    coin.mktCap?.formatWithRoundAndSuffix()
-                                        ?: getString(R.string.no_data),
-                                ),
-                            )
-                            ciLastMarket.setValue(coin.lastMarket ?: getString(R.string.no_data))
-                            ciLastUpdate.setValue(coin.lastUpdate)
-                            ciLastUpdate.showDivider(false)
-                            Picasso.get().load(coin.imageUrl).into(ivLogoCoinDetail)
-
-                            binding.cvCoinInfo.visibility = View.VISIBLE
-                            binding.pbLoadingIndicator.visibility = View.GONE
-                            binding.errorScreen.visibility = View.GONE
-                        }
-                    }
+                    displayCoinInfoContent(screen)
+                    binding.cvCoinInfo.visibility = View.VISIBLE
+                    binding.pbLoadingIndicator.visibility = View.GONE
+                    binding.errorScreen.visibility = View.GONE
                 }
+
+                CoinInfoScreenState.Initial -> {}
+            }
+        }
+    }
+
+    private fun displayCoinInfoContent(screen: CoinInfoScreenState.Content) {
+        val changePctTemplate =
+            requireContext().resources.getString(R.string.change_pct_24_hour_template)
+        val costTemplate =
+            requireContext().resources.getString(R.string.cost_template)
+        with(binding) {
+            with(screen) {
+                tvFromSymbol.text = coin.fromSymbol
+                tvToSymbol.text = coin.toSymbol
+                ciPrice.setValue(
+                    String.format(
+                        costTemplate,
+                        coin.price?.formatWithRoundAndDelimiter(),
+                    ),
+                )
+                ciOpenPrice.setValue(
+                    String.format(
+                        costTemplate,
+                        coin.openDay?.formatWithRoundAndDelimiter(),
+                    ),
+                )
+                ciMinPrice.setValue(
+                    String.format(
+                        costTemplate,
+                        coin.lowDay?.formatWithRoundAndDelimiter(),
+                    ),
+                )
+                ciMaxPrice.setValue(
+                    String.format(
+                        costTemplate,
+                        coin.highDay?.formatWithRoundAndDelimiter(),
+                    ),
+                )
+                ciChangePctDay.setValue(
+                    String.format(
+                        changePctTemplate,
+                        coin.changePctDay,
+                    ),
+                )
+                ciVolumeDay.setValue(
+                    String.format(
+                        costTemplate,
+                        coin.volumeDay?.formatWithRoundAndDelimiter()
+                            ?: getString(R.string.no_data),
+                    ),
+                )
+                ciMktCap.setValue(
+                    String.format(
+                        costTemplate,
+                        coin.mktCap?.formatWithRoundAndSuffix()
+                            ?: getString(R.string.no_data),
+                    ),
+                )
+                ciLastMarket.setValue(coin.lastMarket ?: getString(R.string.no_data))
+                ciLastUpdate.setValue(coin.lastUpdate)
+                ciLastUpdate.showDivider(false)
+                Picasso.get().load(coin.imageUrl).into(ivLogoCoinDetail)
             }
         }
     }
