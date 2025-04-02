@@ -32,6 +32,16 @@ jobs:
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
 
+      - name: Find and upload APK
+        run: |
+          APK_PATH=$(find app/build/outputs/apk/ -name "*.apk" | head -1)
+          if [ -z "$APK_PATH" ]; then
+            echo "::error::APK not found!"
+            exit 1
+          fi
+          echo "Uploading: $APK_PATH"
+          gh release upload <TAG> "$APK_PATH" --clobber
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
