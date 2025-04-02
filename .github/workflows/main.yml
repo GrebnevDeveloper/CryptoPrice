@@ -29,6 +29,24 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew assembleDebug
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+
+      - name: Verify APK exists
+        run: |
+          APK_PATH=$(find app/build/outputs/ -name "CryptoPrice_*.apk" | head -1)
+          if [ -z "$APK_PATH" ]; then
+            echo "::error::APK file not found!"
+            exit 1
+          else
+            echo "APK found at: $APK_PATH"
+          fi
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/**/CryptoPrice_*.apk
 
       - name: Run Ktlint
         run: ./gradlew ktlintCheck
@@ -38,14 +56,3 @@ jobs:
 
       - name: Run Unit Tests
         run: ./gradlew test
-
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug
-        env:
-          GITHUB_REF_NAME: ${{ github.ref_name }}
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-debug
-          path: app/build/outputs/apk/debug/CryptoPrice_*.apk
