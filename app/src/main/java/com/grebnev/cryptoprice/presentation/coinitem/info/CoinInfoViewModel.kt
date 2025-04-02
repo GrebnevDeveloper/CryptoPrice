@@ -39,7 +39,7 @@ class CoinInfoViewModel
             viewModelScope.launch(coroutineExceptionHandler) {
                 getCoinItemUseCase(fromSymbol)
                     .map { mapResultStatusToScreenState(it) }
-                    .onStart { CoinInfoScreenState.Loading }
+                    .onStart { emit(CoinInfoScreenState.Loading) }
                     .collect { _screenState.value = it }
             }
         }

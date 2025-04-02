@@ -16,7 +16,6 @@ import com.grebnev.cryptoprice.domain.repository.CoinListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -50,7 +49,6 @@ class CoinListRepositoryImpl
                 Timber.e(throwable)
                 emit(ResultStatus.Error(ErrorHandler.getErrorTypeByError(throwable)))
             }.flowOn(Dispatchers.Default)
-        private val errorFlow = MutableSharedFlow<ErrorType>(replay = 1)
 
         override val getCoinList: Flow<ResultStatus<List<Coin>, ErrorType>> = coinListFlow
 
@@ -70,10 +68,6 @@ class CoinListRepositoryImpl
                 .collect { workInfos ->
                     workInfos.forEach { workInfo ->
                         if (workInfo.state == WorkInfo.State.FAILED) {
-                            Timber.e("Error in worker")
-                            val outputError = workInfo.outputData.getString(RefreshDataWorker.ERROR_KEY)
-                            val typeError = ErrorHandler.getErrorTypeByValue(outputError)
-                            errorFlow.emit(typeError)
                             delay(RefreshDataWorker.REFRESH_TIMEOUT_AFTER_ERROR)
                             loadData()
                         }

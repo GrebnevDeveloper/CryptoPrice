@@ -35,7 +35,7 @@ class CoinListViewModel
         val screenState =
             coinListFlow
                 .map { mapResultStateToScreenState(it) }
-                .onStart { CoinListScreenState.Loading }
+                .onStart { emit(CoinListScreenState.Loading) }
                 .asLiveData()
 
         private fun mapResultStateToScreenState(
