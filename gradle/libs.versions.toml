@@ -25,6 +25,8 @@ activityCompose = "1.10.1"
 viewmodelCompose = "2.8.7"
 composeBom = "2025.03.01"
 splashScreen = "1.0.1"
+junitCompose = "1.6.0"
+manifestCompose = "1.7.0"
 
 [libraries]
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -57,8 +59,8 @@ androidx-ui = { module = "androidx.compose.ui:ui" }
 androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
-androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
-androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "manifestCompose" }
+androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "junitCompose" }
 androidx-material3 = { module = "androidx.compose.material3:material3" }
 androidx-material-icons = { module = "androidx.compose.material:material-icons-extended" }
 androidx-viewbinding-compose = { module = "androidx.compose.ui:ui-viewbinding" }
@@ -68,7 +70,6 @@ androidx-splash = { module = "androidx.core:core-splashscreen", version.ref = "s
 network = ["retrofit", "okhttp3", "okhttp3-log", "gson-converter"]
 compose = ["androidx-activity-compose", "androidx-viewmodel-compose", "androidx-viewbinding-compose"]
 ui = ["androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling", "androidx-ui-tooling-preview", "androidx-material3", "androidx-material-icons"]
-ui-test = ["androidx-ui-test-manifest", "androidx-ui-test-junit4"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
