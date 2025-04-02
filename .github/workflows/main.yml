@@ -32,21 +32,18 @@ jobs:
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
 
-      - name: Verify APK exists
+      - name: Find exact APK path
+        id: find_apk
         run: |
-          APK_PATH=$(find app/build/outputs/ -name "CryptoPrice_*.apk" | head -1)
-          if [ -z "$APK_PATH" ]; then
-            echo "::error::APK file not found!"
-            exit 1
-          else
-            echo "APK found at: $APK_PATH"
-          fi
+          APK_PATH=$(find app/build/outputs/apk/debug -name "CryptoPrice_*.apk" | head -1)
+          echo "APK_PATH=${APK_PATH}" >> $GITHUB_OUTPUT
+          echo "Found APK at: ${APK_PATH}"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: app/build/outputs/**/CryptoPrice_*.apk
+          path: ${{ steps.find_apk.outputs.APK_PATH }}
 
       - name: Run Ktlint
         run: ./gradlew ktlintCheck
