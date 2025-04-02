@@ -13,6 +13,8 @@ object ApiFactory {
         OkHttpClient
             .Builder()
             .addInterceptor(
+                AuthInterceptor(""),
+            ).addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
                 },
