@@ -22,11 +22,12 @@ android {
         variant.outputs.configureEach { output ->
             def versionName = variant.versionName
             def versionCode = variant.versionCode
-            def flavor = variant.flavorName
             def buildType = variant.buildType.name
             def date = new Date().format("yyyyMMdd_HHmm")
 
-            outputFileName = "CryptoPrice_${flavor}_${buildType}_${versionName}_${versionCode}_${date}.apk"
+            def gitBranch = System.getenv("GITHUB_REF_NAME") ?: "local"
+
+            outputFileName = "CryptoPrice_${gitBranch}_${buildType}_${versionName}_${versionCode}_${date}.apk"
         }
     }
 
