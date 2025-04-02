@@ -35,7 +35,6 @@ class CoinInfoViewModel
         val screenState: LiveData<CoinInfoScreenState> = _screenState.asLiveData()
 
         fun getCoinInfo(fromSymbol: String) {
-            _screenState.value = CoinInfoScreenState.Loading
             viewModelScope.launch(coroutineExceptionHandler) {
                 getCoinItemUseCase(fromSymbol)
                     .map { mapResultStatusToScreenState(it) }

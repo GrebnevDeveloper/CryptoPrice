@@ -54,7 +54,10 @@ class CoinNewsFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         val category =
-            requireArguments().getString(Constants.Args.EXTRA_FROM_SYMBOL, Constants.Args.EMPTY_SYMBOL)
+            requireArguments().getString(
+                Constants.Args.EXTRA_FROM_SYMBOL,
+                Constants.Args.EMPTY_SYMBOL,
+            )
         viewModel.getNewsForCoin(category)
         binding.rvCoinNewsList.adapter = adapter
         viewModel.screenState.observe(viewLifecycleOwner) { screen ->
