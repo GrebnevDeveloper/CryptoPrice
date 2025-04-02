@@ -1,8 +1,8 @@
 [versions]
 agp = "8.9.1"
-kotlinAndroid = "2.0.20"
-kotlinJvm = "2.1.0"
-ksp = "2.1.10-1.0.31"
+kotlinAndroid = "2.1.20"
+kotlinJvm = "2.1.20"
+ksp = "2.1.20-1.0.32"
 coreKtx = "1.15.0"
 appcompat = "1.7.0"
 material = "1.12.0"
@@ -25,8 +25,7 @@ activityCompose = "1.10.1"
 viewmodelCompose = "2.8.7"
 composeBom = "2025.03.01"
 splashScreen = "1.0.1"
-junitCompose = "1.6.0"
-manifestCompose = "1.7.0"
+testCompose = "1.7.8"
 
 [libraries]
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -59,8 +58,8 @@ androidx-ui = { module = "androidx.compose.ui:ui" }
 androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
-androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "manifestCompose" }
-androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "junitCompose" }
+androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "testCompose" }
+androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "testCompose" }
 androidx-material3 = { module = "androidx.compose.material3:material3" }
 androidx-material-icons = { module = "androidx.compose.material:material-icons-extended" }
 androidx-viewbinding-compose = { module = "androidx.compose.ui:ui-viewbinding" }
