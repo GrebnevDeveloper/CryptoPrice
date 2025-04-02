@@ -18,9 +18,30 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            def versionName = variant.versionName
+            def versionCode = variant.versionCode
+            def buildType = variant.buildType.name
+            def date = new Date().format("yyyyMMdd_HHmm")
+
+            def gitBranch = System.getenv("GITHUB_REF_NAME") ?: "local"
+
+            outputFileName = "CryptoPrice_${gitBranch}_${buildType}_${versionName}_${versionCode}_${date}.apk"
+        }
+    }
+
     buildTypes {
-        release {
+        debug {
+            debuggable true
             minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -73,5 +94,6 @@ dependencies {
     implementation(libs.timber.log)
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.test.junit.android)
-    androidTestImplementation(libs.bundles.ui.test)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }

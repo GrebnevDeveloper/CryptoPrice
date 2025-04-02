@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CryptoPrice</string>
+    <string name="slash">/</string>
+    <string name="price">Текущая цена:</string>
+    <string name="min_price">Минимум за день:</string>
+    <string name="max_price">Максимум за день:</string>
+    <string name="last_market">Последняя сделка:</string>
+    <string name="mktcap">Капитализация:</string>
+    <string name="last_update">Обновлено:</string>
+    <string name="change_pct_24_hour_template">%.2f%%</string>
+    <string name="cost_template">$ %s</string>
+    <string name="price_list_title">Цена</string>
+    <string name="coin">Монета</string>
+    <string name="change_pct_24">24ч</string>
+    <string name="mktcap_label">Капитализация</string>
+    <string name="loading">Загрузка...</string>
+    <string name="minute">МИН</string>
+    <string name="hourly">ЧАС</string>
+    <string name="daily">ДЕНЬ</string>
+    <string name="page_info">Детали</string>
+    <string name="page_terminal">Терминал</string>
+    <string name="page_news">Новости</string>
+    <string name="open_price">Цена открытия:</string>
+    <string name="volume_day">Объём за день:</string>
+    <string name="change_day">Изменение за день:</string>
+    <string name="no_data">Нет данных</string>
+    <string name="retry">Повторить</string>
+    <string name="network_error_message">Проблемы с сетью. Проверьте подключение.</string>
+    <string name="database_error_message">Ошибка работы с базой данных.</string>
+    <string name="unknown_error_message">Произошла неизвестная ошибка.</string>
+    <string name="no_internet_connection">Нет подключения к интернету</string>
+</resources>

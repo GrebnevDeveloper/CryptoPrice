@@ -5,7 +5,6 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.grebnev.core.extensions.convertTimestampToTimeByPattern
-import com.grebnev.core.extensions.mergeWith
 import com.grebnev.core.handlers.ErrorHandler
 import com.grebnev.core.wrappers.ErrorType
 import com.grebnev.core.wrappers.ResultStatus
@@ -14,12 +13,14 @@ import com.grebnev.cryptoprice.data.mapper.CoinMapper
 import com.grebnev.cryptoprice.data.workers.RefreshDataWorker
 import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.repository.CoinListRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.retry
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -41,15 +42,15 @@ class CoinListRepositoryImpl
                     }.collect {
                         emit(ResultStatus.Success(it) as ResultStatus<List<Coin>, ErrorType>)
                     }
+            }.retry(ErrorHandler.MAX_COUNT_RETRY) {
+                delay(ErrorHandler.RETRY_TIMEOUT)
+                true
             }.catch { throwable ->
                 Timber.e(throwable)
                 emit(ResultStatus.Error(ErrorHandler.getErrorTypeByError(throwable)))
-            }
-        private val refreshedListFlow = MutableSharedFlow<ResultStatus<List<Coin>, ErrorType>>()
+            }.flowOn(Dispatchers.Default)
 
-        override val getCoinList: Flow<ResultStatus<List<Coin>, ErrorType>> =
-            coinListFlow
-                .mergeWith(refreshedListFlow)
+        override val getCoinList: Flow<ResultStatus<List<Coin>, ErrorType>> = coinListFlow
 
         override suspend fun loadData() {
             val workManager = WorkManager.getInstance(application)
@@ -67,10 +68,6 @@ class CoinListRepositoryImpl
                 .collect { workInfos ->
                     workInfos.forEach { workInfo ->
                         if (workInfo.state == WorkInfo.State.FAILED) {
-                            Timber.e("Error in worker")
-                            val outputError = workInfo.outputData.getString(RefreshDataWorker.ERROR_KEY)
-                            val typeError = ErrorHandler.getErrorTypeByValue(outputError)
-                            refreshedListFlow.emit(ResultStatus.Error(typeError))
                             delay(RefreshDataWorker.REFRESH_TIMEOUT_AFTER_ERROR)
                             loadData()
                         }
@@ -79,7 +76,9 @@ class CoinListRepositoryImpl
         }
 
         override fun getTimeLastUpdate(): Flow<String> =
-            coinDao.getTimeLastUpdate().map { timeLastUpdate ->
-                timeLastUpdate.convertTimestampToTimeByPattern("HH:mm:ss")
-            }
+            coinDao
+                .getTimeLastUpdate()
+                .map { timeLastUpdate ->
+                    timeLastUpdate.convertTimestampToTimeByPattern("HH:mm:ss")
+                }.flowOn(Dispatchers.Default)
     }

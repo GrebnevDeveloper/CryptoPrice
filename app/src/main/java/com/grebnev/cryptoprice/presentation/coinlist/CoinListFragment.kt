@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.grebnev.cryptoprice.R
@@ -34,9 +33,11 @@ class CoinListFragment : Fragment() {
         (requireActivity().application as BaseApplication).component
     }
 
+    private val adapter by lazy { CoinAdapter(requireActivity()) }
+
     private var _binding: FragmentCoinListBinding? = null
     private val binding: FragmentCoinListBinding
-        get() = _binding ?: throw RuntimeException("FragmentCoinItemBinding is null")
+        get() = _binding ?: throw RuntimeException("FragmentCoinListBinding is null")
 
     override fun onAttach(context: Context) {
         component.inject(this)
@@ -57,7 +58,10 @@ class CoinListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.screenState.asLiveData().observe(viewLifecycleOwner) { screen ->
+        setOnCoinClickListener()
+        binding.rvCoinPriceList.addItemDecoration(createDividerForCoinPriceList())
+        binding.rvCoinPriceList.adapter = adapter
+        viewModel.screenState.observe(viewLifecycleOwner) { screen ->
             when (screen) {
                 is CoinListScreenState.Error -> {
                     binding.errorScreen.setErrorMessage(screen.message)
@@ -67,47 +71,58 @@ class CoinListFragment : Fragment() {
                 }
 
                 CoinListScreenState.Loading -> {
+                    binding.tvTimeLastUpdate.text = getString(R.string.loading)
                     binding.rvCoinPriceList.visibility = View.GONE
                     binding.pbLoadingIndicator.visibility = View.VISIBLE
                     binding.errorScreen.visibility = View.GONE
                 }
 
-                is CoinListScreenState.Success -> {
-                    binding.tvTimeLastUpdate.text = screen.timeLastUpdate
-                    val adapter = CoinAdapter(requireActivity())
-                    adapter.onCoinClickListener =
-                        object : CoinAdapter.OnCoinClickListener {
-                            override fun onCoinClick(coin: Coin) {
-                                if (isLandscapeOrientation()) {
-                                    requireActivity().supportFragmentManager.popBackStack()
-                                    launchCoinItemFragment(R.id.second_container, coin)
-                                } else {
-                                    launchCoinItemFragment(R.id.main_container, coin)
-                                }
-                            }
-                        }
-                    val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-                    ContextCompat.getDrawable(requireContext(), R.drawable.divider)?.let { drawable ->
-                        divider.setDrawable(drawable)
-                    } ?: run {
-                        divider.setDrawable(
-                            ContextCompat
-                                .getColor(
-                                    requireContext(),
-                                    R.color.md_theme_secondary,
-                                ).toDrawable(),
-                        )
+                is CoinListScreenState.Content -> {
+                    if (screen.coins.isNotEmpty()) {
+                        binding.tvTimeLastUpdate.text = screen.timeLastUpdate
+                        adapter.submitList(screen.coins)
+                        binding.rvCoinPriceList.visibility = View.VISIBLE
+                        binding.pbLoadingIndicator.visibility = View.GONE
+                        binding.errorScreen.visibility = View.GONE
                     }
-                    binding.rvCoinPriceList.addItemDecoration(divider)
-                    binding.rvCoinPriceList.adapter = adapter
-                    adapter.submitList(screen.coins)
-                    binding.rvCoinPriceList.visibility = View.VISIBLE
-                    binding.pbLoadingIndicator.visibility = View.GONE
-                    binding.errorScreen.visibility = View.GONE
                 }
-                CoinListScreenState.Initial -> {}
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun setOnCoinClickListener() {
+        adapter.onCoinClickListener =
+            object : CoinAdapter.OnCoinClickListener {
+                override fun onCoinClick(coin: Coin) {
+                    if (isLandscapeOrientation()) {
+                        requireActivity().supportFragmentManager.popBackStack()
+                        launchCoinItemFragment(R.id.second_container, coin)
+                    } else {
+                        launchCoinItemFragment(R.id.main_container, coin)
+                    }
+                }
+            }
+    }
+
+    private fun createDividerForCoinPriceList(): DividerItemDecoration {
+        val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        ContextCompat.getDrawable(requireContext(), R.drawable.divider)?.let { drawable ->
+            divider.setDrawable(drawable)
+        } ?: run {
+            divider.setDrawable(
+                ContextCompat
+                    .getColor(
+                        requireContext(),
+                        R.color.md_theme_secondary,
+                    ).toDrawable(),
+            )
+        }
+        return divider
     }
 
     private fun isLandscapeOrientation() =

@@ -8,11 +8,10 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import androidx.work.workDataOf
-import com.grebnev.core.handlers.ErrorHandler
 import com.grebnev.cryptoprice.data.database.CoinDao
 import com.grebnev.cryptoprice.data.mapper.CoinMapper
 import com.grebnev.cryptoprice.data.network.ApiService
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -37,14 +36,13 @@ class RefreshDataWorker(
 
             return Result.success()
         } catch (exception: Exception) {
-            val typeError = ErrorHandler.getErrorTypeByError(exception)
-            val outputError = workDataOf(ERROR_KEY to typeError.type)
-            return Result.failure(outputError)
+            Timber.e(exception)
+            return Result.failure()
         }
     }
 
     private suspend fun loadCoinList() {
-        val topCoins = apiService.getTopCoinsInfo(limit = 50)
+        val topCoins = apiService.getTopCoinsInfo(limit = TOP_COINS_LIMIT)
         val fSyms = mapper.mapNamesListToString(topCoins)
         val jsonContainer = apiService.getFullPriceList(fSyms = fSyms)
         val coinDtoList = mapper.mapJsonContainerDtoToCoinDtoList(jsonContainer)
@@ -56,16 +54,16 @@ class RefreshDataWorker(
     }
 
     companion object {
+        private const val TOP_COINS_LIMIT = 50
         const val REFRESH_WORKER_NAME = "refresh_data_worker"
-        const val ERROR_KEY = "error_key"
-        const val REFRESH_TIMEOUT = 10L
+        const val REFRESH_TIMEOUT_SECONDS = 10L
         const val REFRESH_TIMEOUT_AFTER_ERROR = 5000L
 
         fun makeRequest(): OneTimeWorkRequest = OneTimeWorkRequestBuilder<RefreshDataWorker>().build()
 
         fun makeRequestWithTimeout(): OneTimeWorkRequest =
             OneTimeWorkRequestBuilder<RefreshDataWorker>()
-                .setInitialDelay(REFRESH_TIMEOUT, TimeUnit.SECONDS)
+                .setInitialDelay(REFRESH_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .build()
     }
 
