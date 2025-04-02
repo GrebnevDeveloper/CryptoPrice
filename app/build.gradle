@@ -27,7 +27,7 @@ android {
 
             def gitBranch = System.getenv("GITHUB_REF_NAME") ?: "local"
 
-            outputFileName = "app-debug.apk"
+            outputFileName = "CryptoPrice_${gitBranch}_${buildType}_${versionName}_${versionCode}_${date}.apk"
         }
     }
 

@@ -32,19 +32,12 @@ jobs:
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
 
-      - name: Find exact APK path
-        id: find_apk
-        run: |
-          APK_PATH=$(find app/build/outputs/apk/debug -name "CryptoPrice_*.apk" | head -1)
-          echo "APK_PATH=${APK_PATH}" >> $GITHUB_OUTPUT
-          echo "Found APK at: ${APK_PATH}"
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/
-          if-no-files-found: error
+          path: app/build/outputs/apk/debug/CryptoPrice_*.apk
+        if-no-files-found: error
 
       - name: Fix permissions
         run: sudo chmod -R a+r app/build/outputs/
