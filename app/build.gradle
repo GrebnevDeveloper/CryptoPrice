@@ -25,7 +25,7 @@ android {
             def buildType = variant.buildType.name
             def date = new Date().format("yyyyMMdd_HHmm")
 
-            def gitBranch = System.getenv("GITHUB_REF_NAME") ?: "local"
+            def gitBranch = System.getenv("GITHUB_REF_NAME")?.replace('/', '_') ?: "local"
 
             outputFileName = "CryptoPrice_${gitBranch}_${buildType}_${versionName}_${versionCode}_${date}.apk"
         }
@@ -53,6 +53,7 @@ android {
         jvmTarget = '17'
     }
     buildFeatures {
+        buildConfig = true
         viewBinding true
         compose true
     }
