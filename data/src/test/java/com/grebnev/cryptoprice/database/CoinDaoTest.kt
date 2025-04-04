@@ -1,20 +1,23 @@
-package com.grebnev.cryptoprice
+package com.grebnev.cryptoprice.database
 
+import android.os.Build
 import androidx.room.Room
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import com.grebnev.cryptoprice.data.database.AppDatabase
 import com.grebnev.cryptoprice.data.database.CoinDao
 import com.grebnev.cryptoprice.data.database.CoinDbModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Build.VERSION_CODES.Q])
 class CoinDaoTest {
     private lateinit var database: AppDatabase
     private lateinit var coinDao: CoinDao
@@ -56,12 +59,10 @@ class CoinDaoTest {
                 openDay = 2950.0,
                 volumeDay = 30000000.0,
             )
-
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
         database =
             Room
                 .inMemoryDatabaseBuilder(
-                    context,
+                    RuntimeEnvironment.getApplication(),
                     AppDatabase::class.java,
                 ).allowMainThreadQueries()
                 .build()
@@ -75,33 +76,33 @@ class CoinDaoTest {
     }
 
     @Test
-    fun insertCoinList_and_getCoinList_shouldReturnAllCoinsOrderedByMktCap() =
+    fun `insertCoinList and getCoinList should return all coins ordered by market cap`() =
         runTest {
             val testCoins = listOf(btcCoin, ethCoin)
 
             coinDao.insertCoinList(testCoins)
             val result = coinDao.getCoinList().first()
 
-            assertEquals(2, result.size)
-            assertEquals("BTC", result[0].fromSymbol)
-            assertEquals("ETH", result[1].fromSymbol)
+            Assert.assertEquals(2, result.size)
+            Assert.assertEquals("BTC", result[0].fromSymbol)
+            Assert.assertEquals("ETH", result[1].fromSymbol)
         }
 
     @Test
-    fun getCoinFromSymbol_shouldReturnCorrectCoin() =
+    fun `getCoinFromSymbol should return correct coin`() =
         runTest {
             val testCoin = btcCoin
             coinDao.insertCoinList(listOf(testCoin))
 
             val result = coinDao.getCoinFromSymbol("BTC").first()
 
-            assertEquals(testCoin.fromSymbol, result.fromSymbol)
-            assertEquals(testCoin.price, result.price)
-            assertEquals(testCoin.lastMarket, result.lastMarket)
+            Assert.assertEquals(testCoin.fromSymbol, result.fromSymbol)
+            Assert.assertEquals(testCoin.price, result.price)
+            Assert.assertEquals(testCoin.lastMarket, result.lastMarket)
         }
 
     @Test
-    fun getTimeLastUpdate_shouldReturnLatestTimestamp() =
+    fun `getTimeLastUpdate should return latest timestamp`() =
         runTest {
             val currentTime = System.currentTimeMillis()
             val oldBtc = btcCoin.copy(lastUpdate = currentTime - 10000)
@@ -110,11 +111,11 @@ class CoinDaoTest {
 
             val result = coinDao.getTimeLastUpdate().first()
 
-            assertEquals(currentTime, result)
+            Assert.assertEquals(currentTime, result)
         }
 
     @Test
-    fun insertCoinList_withSameFromSymbol_shouldReplaceExisting() =
+    fun `insertCoinList with same fromSymbol should replace existing`() =
         runTest {
             val originalCoin = btcCoin
             coinDao.insertCoinList(listOf(originalCoin))
@@ -124,8 +125,8 @@ class CoinDaoTest {
             coinDao.insertCoinList(listOf(updatedCoin))
             val result = coinDao.getCoinFromSymbol("BTC").first()
 
-            assertEquals(updatedCoin.price, result.price)
-            assertEquals(updatedCoin.lastMarket, result.lastMarket)
-            assertEquals(1, coinDao.getCoinList().first().size)
+            Assert.assertEquals(updatedCoin.price, result.price)
+            Assert.assertEquals(updatedCoin.lastMarket, result.lastMarket)
+            Assert.assertEquals(1, coinDao.getCoinList().first().size)
         }
 }

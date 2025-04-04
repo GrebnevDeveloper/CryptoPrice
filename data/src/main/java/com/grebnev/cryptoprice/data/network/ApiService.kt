@@ -29,7 +29,7 @@ interface ApiService {
         @Query(QUERY_PARAM_TO_SYMBOL) tSym: String = CURRENCY,
     ): BarContainerDto
 
-    @GET("/data/v2/news/")
+    @GET("v2/news/")
     suspend fun getNewsForCoin(
         @Query(QUERY_PARAM_LANG) lang: String = "EN",
         @Query(QUERY_PARAM_CATEGORIES) category: String?,
