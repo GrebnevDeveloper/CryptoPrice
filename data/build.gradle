@@ -49,5 +49,10 @@ dependencies {
 
     implementation(libs.timber.log)
     testImplementation(libs.test.junit)
+    testImplementation(libs.coroutines.test)
     androidTestImplementation(libs.test.junit.android)
+    androidTestImplementation(libs.bundles.androidx.test)
+    androidTestImplementation(libs.room.test)
+    androidTestImplementation(libs.coroutines.test)
+
 }

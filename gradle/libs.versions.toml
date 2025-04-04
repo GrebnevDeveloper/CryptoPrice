@@ -26,6 +26,8 @@ viewmodelCompose = "2.8.7"
 composeBom = "2025.03.01"
 splashScreen = "1.0.1"
 testCompose = "1.7.8"
+androidxTest = "1.6.1"
+androidxTestRunner = "1.6.2"
 
 [libraries]
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -34,11 +36,13 @@ android-material = { module = "com.google.android.material:material", version.re
 constraint-layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraint" }
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 images-picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-test = { module = "androidx.room:room-testing", version.ref = "room" }
 work-rutime = { module = "androidx.work:work-runtime-ktx", version.ref = "worker" }
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
@@ -64,11 +68,15 @@ androidx-material3 = { module = "androidx.compose.material3:material3" }
 androidx-material-icons = { module = "androidx.compose.material:material-icons-extended" }
 androidx-viewbinding-compose = { module = "androidx.compose.ui:ui-viewbinding" }
 androidx-splash = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidxTest" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidxTest" }
 
 [bundles]
 network = ["retrofit", "okhttp3", "okhttp3-log", "gson-converter"]
 compose = ["androidx-activity-compose", "androidx-viewmodel-compose", "androidx-viewbinding-compose"]
 ui = ["androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling", "androidx-ui-tooling-preview", "androidx-material3", "androidx-material-icons"]
+androidx-test = ["androidx-test-core", "androidx-test-runner", "androidx-test-rules"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
