@@ -50,9 +50,9 @@ dependencies {
     implementation(libs.timber.log)
     testImplementation(libs.test.junit)
     testImplementation(libs.coroutines.test)
+    testImplementation(libs.robolectric.test)
+    testImplementation(libs.okhttp3.mockwebserver)
+    testImplementation(libs.mockk.test)
+    testImplementation(libs.room.test)
     androidTestImplementation(libs.test.junit.android)
-    androidTestImplementation(libs.bundles.androidx.test)
-    androidTestImplementation(libs.room.test)
-    androidTestImplementation(libs.coroutines.test)
-
 }
