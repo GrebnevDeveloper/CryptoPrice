@@ -54,5 +54,6 @@ dependencies {
     testImplementation(libs.okhttp3.mockwebserver)
     testImplementation(libs.mockk.test)
     testImplementation(libs.room.test)
+    testImplementation(libs.work.test)
     androidTestImplementation(libs.test.junit.android)
 }
