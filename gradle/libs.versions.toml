@@ -71,6 +71,7 @@ androidx-viewbinding-compose = { module = "androidx.compose.ui:ui-viewbinding" }
 androidx-splash = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
 mockk-test = { module = "io.mockk:mockk", version.ref = "mockk"}
 robolectric-test = { module = "org.robolectric:robolectric", version.ref = "robolectric"}
+work-test = { module = "androidx.work:work-testing", version.ref = "worker"}
 
 [bundles]
 network = ["retrofit", "okhttp3", "okhttp3-log", "gson-converter"]
