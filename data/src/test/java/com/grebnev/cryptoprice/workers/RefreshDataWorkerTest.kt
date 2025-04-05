@@ -22,6 +22,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import kotlinx.coroutines.test.runTest
@@ -97,6 +98,11 @@ class RefreshDataWorkerTest {
 
             worker.doWork()
 
+            coVerify { mockApiService.getTopCoinsInfo(any()) }
+            verify { mockMapper.mapNamesListToString(mockTopCoins) }
+            coVerify { mockApiService.getFullPriceList(any()) }
+            verify { mockMapper.mapJsonContainerDtoToCoinDtoList(mockJsonContainer) }
+            verify { mockMapper.mapDtoToDbModel(mockCoinDto) }
             coVerify { mockCoinDao.insertCoinList(listOf(mockDbModel)) }
         }
 
