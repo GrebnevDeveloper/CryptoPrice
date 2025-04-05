@@ -156,6 +156,7 @@ class CoinMapperTest {
         val timestamp = 1672531200L
         val pattern = "HH:mm:ss"
         val timeZone = TimeZone.getTimeZone("UTC")
+        val expectedFormattedTime = "04:00:00"
         val coinDbModel =
             CoinDbModel(
                 fromSymbol = "BTC",
@@ -191,7 +192,7 @@ class CoinMapperTest {
         assertEquals("BTC", result.fromSymbol)
         assertEquals("USD", result.toSymbol)
         assertEquals(50000.0, result.price)
-        assertEquals("04:00:00", result.lastUpdate)
+        assertEquals(expectedFormattedTime, result.lastUpdate)
         assertEquals(51000.0, result.highDay)
         assertEquals(49000.0, result.lowDay)
         assertEquals("Binance", result.lastMarket)
