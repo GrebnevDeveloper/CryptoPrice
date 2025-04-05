@@ -55,5 +55,6 @@ dependencies {
     testImplementation(libs.mockk.test)
     testImplementation(libs.room.test)
     testImplementation(libs.work.test)
+    testImplementation(libs.turbine.test)
     androidTestImplementation(libs.test.junit.android)
 }
