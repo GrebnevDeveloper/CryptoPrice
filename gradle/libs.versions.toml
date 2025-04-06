@@ -29,6 +29,7 @@ testCompose = "1.7.8"
 mockk = "1.13.17"
 robolectric = "4.14.1"
 turbine = "1.2.0"
+androidTest = "2.2.0"
 
 [libraries]
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -73,7 +74,9 @@ androidx-splash = { module = "androidx.core:core-splashscreen", version.ref = "s
 mockk-test = { module = "io.mockk:mockk", version.ref = "mockk"}
 robolectric-test = { module = "org.robolectric:robolectric", version.ref = "robolectric"}
 work-test = { module = "androidx.work:work-testing", version.ref = "worker"}
-turbine-test = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+turbine-test = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+androidx-core-test = { module = "androidx.arch.core:core-testing", version.ref = "androidTest" }
+
 
 [bundles]
 network = ["retrofit", "okhttp3", "okhttp3-log", "gson-converter"]
