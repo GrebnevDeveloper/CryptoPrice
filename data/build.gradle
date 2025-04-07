@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'com.grebnev.cryptoprice'
+    namespace 'com.grebnev.cryptoprice.data'
     compileSdk 35
 
     defaultConfig {
