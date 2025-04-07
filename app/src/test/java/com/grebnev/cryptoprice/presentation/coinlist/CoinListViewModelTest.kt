@@ -5,11 +5,9 @@ import com.grebnev.core.wrappers.ErrorType
 import com.grebnev.core.wrappers.ResultStatus
 import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.usecase.GetCoinListUseCase
-import com.grebnev.cryptoprice.domain.usecase.GetTimeLastUpdate
+import com.grebnev.cryptoprice.domain.usecase.GetTimeLastUpdateUseCase
 import com.grebnev.cryptoprice.domain.usecase.LoadDataUseCase
 import com.grebnev.cryptoprice.presentation.base.error.ErrorMessageProvider
-import com.grebnev.cryptoprice.presentation.coinlist.CoinListScreenState
-import com.grebnev.cryptoprice.presentation.coinlist.CoinListViewModel
 import com.grebnev.cryptoprice.testutils.observeForTesting
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -42,7 +40,7 @@ class CoinListViewModelTest {
     private lateinit var getCoinListUseCase: GetCoinListUseCase
 
     @MockK
-    private lateinit var getTimeLastUpdate: GetTimeLastUpdate
+    private lateinit var getTimeLastUpdateUseCase: GetTimeLastUpdateUseCase
 
     @MockK
     private lateinit var errorMessageProvider: ErrorMessageProvider
@@ -65,12 +63,12 @@ class CoinListViewModelTest {
     fun `init should call loadDataUseCase and getLastUpdate`() =
         runTest {
             coEvery { getCoinListUseCase() } returns flowOf(ResultStatus.Success(emptyList()))
-            coEvery { getTimeLastUpdate() } returns flowOf("12:00:00")
+            coEvery { getTimeLastUpdateUseCase() } returns flowOf("12:00:00")
 
             viewModel = createViewModel()
 
             coVerify { loadDataUseCase() }
-            coVerify { getTimeLastUpdate() }
+            coVerify { getTimeLastUpdateUseCase() }
         }
 
     @Test
@@ -78,7 +76,7 @@ class CoinListViewModelTest {
         runTest {
             val coins = listOf(mockk<Coin>())
             coEvery { getCoinListUseCase() } returns flowOf(ResultStatus.Success(coins))
-            coEvery { getTimeLastUpdate() } returns flowOf("12:00:00")
+            coEvery { getTimeLastUpdateUseCase() } returns flowOf("12:00:00")
 
             viewModel = createViewModel()
 
@@ -123,7 +121,7 @@ class CoinListViewModelTest {
                     emit(ResultStatus.Error(error))
                     emit(ResultStatus.Success(coins2))
                 }
-            coEvery { getTimeLastUpdate() } returns flowOf("12:00:00")
+            coEvery { getTimeLastUpdateUseCase() } returns flowOf("12:00:00")
             coEvery { errorMessageProvider.getErrorMessage(error) } returns errorMessage
 
             viewModel = createViewModel()
@@ -149,7 +147,7 @@ class CoinListViewModelTest {
         CoinListViewModel(
             loadDataUseCase,
             getCoinListUseCase,
-            getTimeLastUpdate,
+            getTimeLastUpdateUseCase,
             errorMessageProvider,
         )
 }

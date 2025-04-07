@@ -7,7 +7,7 @@ import com.grebnev.core.wrappers.ErrorType
 import com.grebnev.core.wrappers.ResultStatus
 import com.grebnev.cryptoprice.domain.entity.Coin
 import com.grebnev.cryptoprice.domain.usecase.GetCoinListUseCase
-import com.grebnev.cryptoprice.domain.usecase.GetTimeLastUpdate
+import com.grebnev.cryptoprice.domain.usecase.GetTimeLastUpdateUseCase
 import com.grebnev.cryptoprice.domain.usecase.LoadDataUseCase
 import com.grebnev.cryptoprice.presentation.base.error.ErrorMessageProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -23,7 +23,7 @@ class CoinListViewModel
     constructor(
         private val loadDataUseCase: LoadDataUseCase,
         private val getCoinListUseCase: GetCoinListUseCase,
-        private val getTimeLastUpdate: GetTimeLastUpdate,
+        private val getTimeLastUpdateUseCase: GetTimeLastUpdateUseCase,
         private val errorMessageProvider: ErrorMessageProvider,
     ) : ViewModel() {
         private val exceptionHandler =
@@ -56,7 +56,7 @@ class CoinListViewModel
 
         private fun getLastUpdate() {
             viewModelScope.launch(exceptionHandler) {
-                getTimeLastUpdate().collect { time ->
+                getTimeLastUpdateUseCase().collect { time ->
                     timeLastUpdateState.value = time
                 }
             }
