@@ -1,0 +1,16 @@
+package com.grebnev.cryptoprice.presentation.coinlist.adapter
+
+import androidx.recyclerview.widget.DiffUtil
+import com.grebnev.cryptoprice.domain.entity.Coin
+
+object CoinDiffCallback : DiffUtil.ItemCallback<Coin>() {
+    override fun areItemsTheSame(
+        oldItem: Coin,
+        newItem: Coin,
+    ): Boolean = oldItem.fromSymbol == newItem.fromSymbol
+
+    override fun areContentsTheSame(
+        oldItem: Coin,
+        newItem: Coin,
+    ): Boolean = oldItem == newItem
+}

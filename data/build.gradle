@@ -1,0 +1,60 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace 'com.grebnev.cryptoprice.data'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 35
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+    implementation project(path: ':domain')
+    implementation project(path: ':core')
+
+    implementation(platform(libs.okhttp3.bom))
+    implementation(libs.bundles.network)
+
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
+
+    implementation(libs.work.rutime)
+    implementation(libs.work.rutime)
+
+    implementation(libs.timber.log)
+    testImplementation(libs.test.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.robolectric.test)
+    testImplementation(libs.okhttp3.mockwebserver)
+    testImplementation(libs.mockk.test)
+    testImplementation(libs.room.test)
+    testImplementation(libs.work.test)
+    testImplementation(libs.turbine.test)
+    androidTestImplementation(libs.test.junit.android)
+}

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".presentation.coinitem.info.CoinInfoFragment">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_logo_coin_detail"
+            android:layout_width="@dimen/coinInfoImageSize"
+            android:layout_height="@dimen/coinInfoImageSize"
+            android:layout_margin="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextAppearance.Material3.TitleLarge"
+            android:id="@+id/tv_from_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_theme_primary"
+            app:layout_constraintBottom_toBottomOf="@id/tv_slash"
+            app:layout_constraintEnd_toStartOf="@id/tv_slash"
+            app:layout_constraintTop_toTopOf="@id/tv_slash"
+            tools:text="BTC" />
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextAppearance.Material3.TitleLarge"
+            android:id="@+id/tv_slash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/slash"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_logo_coin_detail" />
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextAppearance.Material3.TitleLarge"
+            android:id="@+id/tv_to_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/tv_slash"
+            app:layout_constraintStart_toEndOf="@id/tv_slash"
+            app:layout_constraintTop_toTopOf="@id/tv_slash"
+            tools:text="USD" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_coin_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceCardView"
+            app:layout_constraintTop_toBottomOf="@id/tv_slash">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:labelText="@string/price"
+                    tools:valueText="$ 7850.4"/>
+
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_open_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_price"
+                    app:labelText="@string/open_price"
+                    tools:valueText="$ 7850.4"/>
+
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_min_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_open_price"
+                    app:labelText="@string/min_price"
+                    app:valueColor="@color/min_price"
+                    tools:valueText="$ 7850.4"/>
+
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_max_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_min_price"
+                    app:labelText="@string/max_price"
+                    app:valueColor="@color/max_price"
+                    tools:valueText="$ 7850.4"/>
+
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_change_pct_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_max_price"
+                    app:labelText="@string/change_day"
+                    tools:valueText="10.1%"/>
+
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_volume_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_change_pct_day"
+                    app:labelText="@string/volume_day"
+                    tools:valueText="$ 7850.4"/>
+
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_mkt_cap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_volume_day"
+                    app:labelText="@string/mktcap"
+                    tools:valueText="$ 7850.4"/>
+
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_last_market"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_mkt_cap"
+                    app:labelText="@string/last_market"
+                    tools:valueText="CCCAGG"/>
+
+                <com.grebnev.cryptoprice.presentation.coinitem.info.CoinInfoRowView
+                    android:id="@+id/ci_last_update"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ci_last_market"
+                    app:labelText="@string/last_update"
+                    tools:valueText="12:01:01"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/pb_loading_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_slash"
+            tools:visibility="visible" />
+
+        <com.grebnev.cryptoprice.presentation.base.error.ErrorScreenView
+            android:id="@+id/error_screen"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_slash"
+            app:retryButtonText="@string/retry"
+            app:showRetryButton="false" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

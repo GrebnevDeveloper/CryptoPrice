@@ -1,0 +1,30 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ksp)
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+    }
+}
+
+dependencies {
+    implementation project(path: ':core')
+
+    implementation(libs.coroutines.core)
+
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
+
+    testImplementation(libs.test.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine.test)
+    testImplementation(libs.mockk.test)
+}

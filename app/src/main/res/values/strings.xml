@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">CryptoPrice</string>
+    <string name="slash">/</string>
+    <string name="price">Current price:</string>
+    <string name="min_price">Day low:</string>
+    <string name="max_price">day high:</string>
+    <string name="last_market">Last trade:</string>
+    <string name="mktcap">Market Cap:</string>
+    <string name="last_update">Updated:</string>
+    <string name="change_pct_24_hour_template">%.2f%%</string>
+    <string name="cost_template">$ %s</string>
+    <string name="price_list_title">Price</string>
+    <string name="coin">Coin</string>
+    <string name="change_pct_24">24h</string>
+    <string name="mktcap_label">Market Cap</string>
+    <string name="loading">Loading...</string>
+    <string name="minute">MIN</string>
+    <string name="hourly">HOUR</string>
+    <string name="daily">DAY</string>
+    <string name="page_info">Info</string>
+    <string name="page_terminal">Terminal</string>
+    <string name="page_news">News</string>
+    <string name="open_price">Open price:</string>
+    <string name="volume_day">Day volume:</string>
+    <string name="change_day">Day change:</string>
+    <string name="no_data">No data</string>
+    <string name="retry">Retry</string>
+    <string name="network_error_message">Network problems. Check the network connection.</string>
+    <string name="database_error_message">There was a problem working with the database.</string>
+    <string name="unknown_error_message">An unknown error occurred during the request.</string>
+    <string name="no_internet_connection">No internet connection</string>
 </resources>

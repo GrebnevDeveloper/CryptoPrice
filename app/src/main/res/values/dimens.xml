@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="coinItemImageSize">25dp</dimen>
+    <dimen name="coinInfoImageSize">80dp</dimen>
+    <dimen name="errorImageSize">65dp</dimen>
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CoinInfoRowView">
+        <attr name="labelText" format="string" />
+        <attr name="valueText" format="string" />
+        <attr name="showDivider" format="boolean" />
+        <attr name="valueColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="ErrorScreenView">
+        <attr name="errorMessage" format="string" />
+        <attr name="showRetryButton" format="boolean" />
+        <attr name="retryButtonText" format="string" />
+    </declare-styleable>
+</resources>
