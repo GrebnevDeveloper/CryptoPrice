@@ -58,9 +58,11 @@ class LongExTest {
     fun `convertTimestampToTimeByPattern should handle different patterns`() {
         val timestamp = 1672531200L
 
-        assertEquals("2023", timestamp.convertTimestampToTimeByPattern("yyyy"))
-        assertEquals("01-01", timestamp.convertTimestampToTimeByPattern("MM-dd"))
-        assertEquals("04:00", timestamp.convertTimestampToTimeByPattern("HH:mm"))
+        val utcTimeZone = TimeZone.getTimeZone("UTC")
+
+        assertEquals("2023", timestamp.convertTimestampToTimeByPattern("yyyy", utcTimeZone))
+        assertEquals("01-01", timestamp.convertTimestampToTimeByPattern("MM-dd", utcTimeZone))
+        assertEquals("00:00", timestamp.convertTimestampToTimeByPattern("HH:mm", utcTimeZone))
     }
 
     @Test

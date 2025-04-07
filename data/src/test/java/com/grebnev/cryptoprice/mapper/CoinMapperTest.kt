@@ -156,7 +156,7 @@ class CoinMapperTest {
         val timestamp = 1672531200L
         val pattern = "HH:mm:ss"
         val timeZone = TimeZone.getTimeZone("UTC")
-        val expectedFormattedTime = "04:00:00"
+        val expectedFormattedTime = "00:00:00"
         val coinDbModel =
             CoinDbModel(
                 fromSymbol = "BTC",
@@ -178,13 +178,11 @@ class CoinMapperTest {
         every {
             any<Long>().convertTimestampToTimeByPattern(
                 pattern = eq(pattern),
-                timeZone = timeZone,
             )
         } answers {
             val timestamp = firstArg<Long>()
             val pattern = secondArg<String>()
-            val tz = thirdArg<TimeZone>()
-            timestamp.convertTimestampToTimeByPattern(pattern, tz)
+            timestamp.convertTimestampToTimeByPattern(pattern, timeZone)
         }
 
         val result = mapper.mapDbModelToEntity(coinDbModel)

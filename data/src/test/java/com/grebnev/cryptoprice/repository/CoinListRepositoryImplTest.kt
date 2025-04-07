@@ -102,20 +102,18 @@ class CoinListRepositoryImplTest {
             val timestamp = 1672531200L
             val pattern = "HH:mm:ss"
             val timeZone = TimeZone.getTimeZone("UTC")
-            val expectedFormattedTime = "04:00:00"
+            val expectedFormattedTime = "00:00:00"
 
             mockkStatic("com.grebnev.core.extensions.LongExKt")
             every { coinDao.getTimeLastUpdate() } returns flowOf(timestamp)
             every {
                 any<Long>().convertTimestampToTimeByPattern(
                     pattern = eq(pattern),
-                    timeZone = timeZone,
                 )
             } answers {
                 val timestamp = firstArg<Long>()
                 val pattern = secondArg<String>()
-                val tz = thirdArg<TimeZone>()
-                timestamp.convertTimestampToTimeByPattern(pattern, tz)
+                timestamp.convertTimestampToTimeByPattern(pattern, timeZone)
             }
 
             repository.getTimeLastUpdate().test {

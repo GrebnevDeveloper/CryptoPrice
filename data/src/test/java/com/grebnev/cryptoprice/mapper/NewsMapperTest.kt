@@ -26,15 +26,18 @@ class NewsMapperTest {
         val timestamp = 1672531200L
         val timeZone = TimeZone.getTimeZone("UTC")
         val pattern = "dd.MM.yyyy HH:mm"
-        val expectedFormattedDate = "01.01.2023 04:00"
+        val expectedFormattedDate = "01.01.2023 00:00"
 
         mockkStatic("com.grebnev.core.extensions.LongExKt")
         every {
             any<Long>().convertTimestampToTimeByPattern(
                 pattern = eq(pattern),
-                timeZone = timeZone,
             )
-        } returns expectedFormattedDate
+        } answers {
+            val timestamp = firstArg<Long>()
+            val pattern = secondArg<String>()
+            timestamp.convertTimestampToTimeByPattern(pattern, timeZone)
+        }
 
         val newsDto =
             listOf(
