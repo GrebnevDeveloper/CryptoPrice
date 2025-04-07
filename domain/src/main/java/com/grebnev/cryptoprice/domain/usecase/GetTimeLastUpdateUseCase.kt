@@ -4,7 +4,7 @@ import com.grebnev.cryptoprice.domain.repository.CoinListRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetTimeLastUpdate
+class GetTimeLastUpdateUseCase
     @Inject
     constructor(
         private val coinListRepository: CoinListRepository,
