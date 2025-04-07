@@ -22,4 +22,9 @@ dependencies {
 
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
+
+    testImplementation(libs.test.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine.test)
+    testImplementation(libs.mockk.test)
 }
